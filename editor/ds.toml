@@ -1,3 +1,5 @@
 reset_nonpersistent = true
 paste_check_is_extended = false
 out_file = "../latest.ow"
+c_style_workshop_output = true
+use_tabs_in_workshop_output = true
