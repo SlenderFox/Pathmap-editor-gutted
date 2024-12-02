@@ -1,37 +1,37 @@
 {
-  "Extensions": {
-    "Spawn More Dummy Bots": true,
-    "Play More Effects": true,
-    "Buff Status Effects": true,
-    "Debuff Status Effects": true,
-    "Kinetic Explosion Effects": true,
-    "Energy Explosion Effects": true,
-    "Beam Effects": true,
-    "Beam Sounds": true,
-    "Buff and Debuff Sounds": true,
-    "Explosion Sounds": true
-  },
-  "Modes": {
-    "Skirmish": {
-      "Enabled": true
-    },
-    "Team Deathmatch": {
-      "Enabled": true,
-      "Game Mode Start": "Manual"
-    },
-    "All": {
-      "Respawn Time Scalar": 0
-    }
-  },
-  "Lobby": {
-    "Max Team 1 Players": 1,
-    "Max Team 2 Players": 0
-  },
-  "Heroes": {
-    "General": {
-      "General": {
-        "Ability Cooldown Time": 0
-      }
-    }
-  }
+	"Lobby": {
+		"Max Team 1 Players": 1,
+		"Max Team 2 Players": 0
+	},
+	"Modes": {
+		"All": {
+			"Respawn Time Scalar": 0
+		},
+		"Skirmish": {
+			"Enabled": true
+		},
+		"Team Deathmatch": {
+			"Enabled": true,
+			"Game Mode Start": "Manual"
+		}
+	},
+	"Heroes": {
+		"General": {
+			"General": {
+				"Ability Cooldown Time": 0
+			}
+		}
+	},
+	"Extensions": {
+		"Spawn More Dummy Bots": true,
+		"Play More Effects": true,
+		"Buff Status Effects": true,
+		"Debuff Status Effects": true,
+		"Kinetic Explosion Effects": true,
+		"Energy Explosion Effects": true,
+		"Beam Effects": true,
+		"Beam Sounds": true,
+		"Buff and Debuff Sounds": true,
+		"Explosion Sounds": true
+	}
 }
