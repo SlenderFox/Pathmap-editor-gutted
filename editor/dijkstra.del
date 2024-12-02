@@ -6,144 +6,144 @@ globalvar Boolean pathfinderActive! = false;
 globalvar Number dijkstraProgressReport = 0;
 
 DijkstraResult Dijkstra(
-    Number source,
-    Number[] targets,
-    Number[] attributes
+	Number source,
+	Number[] targets,
+	Number[] attributes
 ) playervar 'Subroutine: Dijkstra'
 {
-    if (pathfinderActive)
-    {
-        LogToInspector('Error: Attempted to pathfind while already active');
-        return { Parents: null };
-    }
-    pathfinderActive = true;
-    dijkstraProgressReport = 0;
+	if (pathfinderActive)
+	{
+		LogToInspector('Error: Attempted to pathfind while already active');
+		return { Parents: null };
+	}
+	pathfinderActive = true;
+	dijkstraProgressReport = 0;
 
-    // WorldNode to actual node
-    Number[] unvisited = Nodes.Map((node, i) => i);
-    Number[] distances = unvisited.Map(node => 9999);
-    Number[] parents = unvisited.Map(node => -1);
+	// WorldNode to actual node
+	Number[] unvisited = Nodes.Map((node, i) => i);
+	Number[] distances = unvisited.Map(node => 9999);
+	Number[] parents = unvisited.Map(node => -1);
 
-    distances[source] = 0;
+	distances[source] = 0;
 
-    while (unvisited.Length && (targets == null || targets.IsTrueForAny(target => unvisited.Contains(target))))
-    {
-        Number current = unvisited.SortedArray(i => distances[i]).First;
-        Number currentID = Nodes[current].Node.UniqueID;
-        unvisited -= current;
+	while (unvisited.Length && (targets == null || targets.IsTrueForAny(target => unvisited.Contains(target))))
+	{
+		Number current = unvisited.SortedArray(i => distances[i]).First;
+		Number currentID = Nodes[current].Node.UniqueID;
+		unvisited -= current;
 
-        define neighbors = Segments
-            // Get the list of segments that contain the current node.
-            .FilteredArray(segment => segment.Node1 == currentID || segment.Node2 == currentID)
-            // Select the opposite node in the segment to get the list of neighbors.
-            .Map(segment => NodeIndexFromID(segment.Node1 == currentID ? segment.Node2 : segment.Node1))
-            // Only use the unvisited neighbors
-            .FilteredArray(node => unvisited.Contains(node));
-        
-        for (Number i! = 0; neighbors.Length; 1)
-        {
-            Number neighborIndex! = neighbors[i];
-            Number neighborID! = Nodes[neighborIndex].Node.UniqueID;
-            Number[] neighborAttributes! = Attributes.FilteredArray(
-                attribute => attribute.Node1 == neighborID && attribute.Node2 == currentID
-            ).Map(a => a.Value);
+		define neighbors = Segments
+			// Get the list of segments that contain the current node.
+			.FilteredArray(segment => segment.Node1 == currentID || segment.Node2 == currentID)
+			// Select the opposite node in the segment to get the list of neighbors.
+			.Map(segment => NodeIndexFromID(segment.Node1 == currentID ? segment.Node2 : segment.Node1))
+			// Only use the unvisited neighbors
+			.FilteredArray(node => unvisited.Contains(node));
 
-            Number newDistance! = distances[current] + Nodes[current].Node.Position.DistanceTo(Nodes[neighborIndex].Node.Position);
-            if (newDistance < distances[neighborIndex] &&
-                (neighborAttributes.Length == 0 || neighborAttributes.IsTrueForAny(attribute => attributes.Contains(attribute)))
-            )
-            {
-                distances[neighborIndex] = newDistance;
-                parents[neighborIndex] = current;
-            }
-        }
+		for (Number i! = 0; neighbors.Length; 1)
+		{
+			Number neighborIndex! = neighbors[i];
+			Number neighborID! = Nodes[neighborIndex].Node.UniqueID;
+			Number[] neighborAttributes! = Attributes.FilteredArray(
+				attribute => attribute.Node1 == neighborID && attribute.Node2 == currentID
+			).Map(a => a.Value);
 
-        dijkstraProgressReport++;
-        MinWait();
-    }
+			Number newDistance! = distances[current] + Nodes[current].Node.Position.DistanceTo(Nodes[neighborIndex].Node.Position);
+			if (newDistance < distances[neighborIndex] &&
+				(neighborAttributes.Length == 0 || neighborAttributes.IsTrueForAny(attribute => attributes.Contains(attribute)))
+			)
+			{
+				distances[neighborIndex] = newDistance;
+				parents[neighborIndex] = current;
+			}
+		}
 
-    pathfinderActive = false;
-    return { Parents: parents };
+		dijkstraProgressReport++;
+		MinWait();
+	}
+
+	pathfinderActive = false;
+	return { Parents: parents };
 }
 
 struct DijkstraResult
 {
-    public Number[] Parents;
+	public Number[] Parents;
 }
 
 /*
 void MakeBake() playervar 'Subroutine: Make Bake'
 {
-    bakeResult = [];
-    Number n = 0;
+	bakeResult = [];
+	Number n = 0;
 
-    define progressBar = CreateProgressBarHudText(
-        AllPlayers(),
-        (n / EvaluateOnce(Nodes.Length) + dijkstraProgressReport / EvaluateOnce(Nodes.Length) ^ 2) * 100,
-        "Baking...",
-        Location.Right,
-        15,
-        ProgressBarColor: Color.Orange,
-        TextColor: Color.White
-    );
-    // Note: making dijkstra not wait on every single iteration would reduce the compile time by quite a lot.
-    define endTime = TotalTimeElapsed() + Nodes.Length * (0.016 + Nodes.Length / 40 * 0.016 + Nodes.Length * 0.016);
-    define timeRemaining: endTime - TotalTimeElapsed();
+	define progressBar = CreateProgressBarHudText(
+		AllPlayers(),
+		(n / EvaluateOnce(Nodes.Length) + dijkstraProgressReport / EvaluateOnce(Nodes.Length) ^ 2) * 100,
+		"Baking...",
+		Location.Right,
+		15,
+		ProgressBarColor: Color.Orange,
+		TextColor: Color.White
+	);
+	// Note: making dijkstra not wait on every single iteration would reduce the compile time by quite a lot.
+	define endTime = TotalTimeElapsed() + Nodes.Length * (0.016 + Nodes.Length / 40 * 0.016 + Nodes.Length * 0.016);
+	define timeRemaining: endTime - TotalTimeElapsed();
 
-    define timeRemainingText = CreateHudText(
-        AllPlayers(),
-        Text: <'Time remaining: <0>:<2><1>', Max(timeRemaining / 60~Floor(), 0), Max(timeRemaining % 60~Floor(), 0), timeRemaining % 60 < 10 ? '0' : ''>,
-        SortOrder: 16,
-        Location: Location.Right);
+	define timeRemainingText = CreateHudText(
+		AllPlayers(),
+		Text: <'Time remaining: <0>:<2><1>', Max(timeRemaining / 60~Floor(), 0), Max(timeRemaining % 60~Floor(), 0), timeRemaining % 60 < 10 ? '0' : ''>,
+		SortOrder: 16,
+		Location: Location.Right);
 
-    # For each node
-    for (n = 0; Nodes.Length; 1) {
-        # Node 'n's compressed data is stored in here.
-        String[] compressed = [];
-        # Will be appended to the end of compressed when it is large enough.
-        String stub = '';
-        # Pathfind current node.
-        Number[] parents = Dijkstra(n, null, pathfinderAttributes).Parents;
-        # Loop through each node relation.
-        Number p;
-        for (p = 0; parents.Length; 1) {
-            # Compress value.
-            stub = stub + bakeMatcher[parents[p] + 1]; // ! Add one so that we do not encode negative values. Exporter will need to adjust.
-            # Append stub to compressed every 256 characters.
-            if (p && !(p % 256)) {
-                compressed += stub;
-                stub = '';
-            }
+	# For each node
+	for (n = 0; Nodes.Length; 1) {
+		# Node 'n's compressed data is stored in here.
+		String[] compressed = [];
+		# Will be appended to the end of compressed when it is large enough.
+		String stub = '';
+		# Pathfind current node.
+		Number[] parents = Dijkstra(n, null, pathfinderAttributes).Parents;
+		# Loop through each node relation.
+		Number p;
+		for (p = 0; parents.Length; 1) {
+			# Compress value.
+			stub = stub + bakeMatcher[parents[p] + 1]; // ! Add one so that we do not encode negative values. Exporter will need to adjust.
+			# Append stub to compressed every 256 characters.
+			if (p && !(p % 256)) {
+				compressed += stub;
+				stub = '';
+			}
 
-            // wait every 40 iterations
-            if (!(p % 40))
-                MinWait();
-        }
+			// wait every 40 iterations
+			if (!(p % 40))
+				MinWait();
+		}
 
-        # If this condition is true, then stub still has contents that should be added to the
-        # compressed data before we continue.
-        if (p && p % 256) {
-            compressed += stub;
-            stub = '';
-        }
+		# If this condition is true, then stub still has contents that should be added to the
+		# compressed data before we continue.
+		if (p && p % 256) {
+			compressed += stub;
+			stub = '';
+		}
 
-        # Add compressed data.
-        bakeResult[n] = compressed;
-        # For good measure.
-        compressed = null;
+		# Add compressed data.
+		bakeResult[n] = compressed;
+		# For good measure.
+		compressed = null;
 
-        MinWait();
-    }
+		MinWait();
+	}
 
-    DestroyProgressBarHudText(progressBar);
-    DestroyHudText(timeRemainingText);
+	DestroyProgressBarHudText(progressBar);
+	DestroyHudText(timeRemainingText);
 }
 
 rule: 'Initialize Bake Matcher'
 Event.OngoingPlayer
 if (eventPlayer == host)
 {
-    // bakeMatcher = BakemapStruct.GenerateMatchArray(500);
+	// bakeMatcher = BakemapStruct.GenerateMatchArray(500);
 }
 
 playervar String[][] bakeResult;

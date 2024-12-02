@@ -38,60 +38,60 @@ rule: '┗━【◈ Paste the actions to load a previous save here! (2/2) ◈】
 
 rule: 'Setup: Inspector, Performance HUD, and Settings'
 {
-    // Inspector
-    if (!WorkshopSettingToggle('Pathmap Editor', 'Enable inspector recording', false, 1))
-        DisableInspectorRecording();
-    else
-        EnableInspector();
-    // HUD
-    CreateHudText(AllPlayers(),
-        Text: <"cap: <0> <1> <2>\nposition: <3>\n<4>",
-        ServerLoad(), ServerLoadAverage(), ServerLoadPeak(),
-        PositionOf(host), SelectedNodeIndex == -1 ? '' : <'Selected node index: <0>', SelectedNodeIndex>>);
-    SetObjectiveDescription(AllPlayers(), '', HudTextRev.VisibleTo);
-    // Settings
-    maxHistoryLength = WorkshopSettingInteger("Pathmap Editor", "Undo history length", 20, 0, 100);
+	// Inspector
+	if (!WorkshopSettingToggle('Pathmap Editor', 'Enable inspector recording', false, 1))
+		DisableInspectorRecording();
+	else
+		EnableInspector();
+	// HUD
+	CreateHudText(AllPlayers(),
+		Text: <"cap: <0> <1> <2>\nposition: <3>\n<4>",
+		ServerLoad(), ServerLoadAverage(), ServerLoadPeak(),
+		PositionOf(host), SelectedNodeIndex == -1 ? '' : <'Selected node index: <0>', SelectedNodeIndex>>);
+	SetObjectiveDescription(AllPlayers(), '', HudTextRev.VisibleTo);
+	// Settings
+	maxHistoryLength = WorkshopSettingInteger("Pathmap Editor", "Undo history length", 20, 0, 100);
 
-    DisableCompletion();
-    SetMatchTime(1);
-    PauseMatchTime();
+	DisableCompletion();
+	SetMatchTime(1);
+	PauseMatchTime();
 }
 
 struct Node
 {
-    public Number UniqueID;
-    public Vector Position;
+	public Number UniqueID;
+	public Vector Position;
 }
 
 struct WorldNode
 {
-    public Node Node;
-    public Boolean Selected = false;
+	public Node Node;
+	public Boolean Selected = false;
 
-    public Color Color(): Highlighted() ?
-        (Selected ? Color.Turquoise : Color.Blue) : // selected / highlighted
-        (Selected ? Color.LimeGreen : Color.White);  // unselected / highlighted
-    
-    public Boolean Highlighted(): SelectedNodeID == Node.UniqueID;
+	public Color Color(): Highlighted() ?
+		(Selected ? Color.Turquoise : Color.Blue) : // selected / highlighted
+		(Selected ? Color.LimeGreen : Color.White);  // unselected / highlighted
 
-    public Vector ShownPosition(): Node.Position + Up() * 1.3;
+	public Boolean Highlighted(): SelectedNodeID == Node.UniqueID;
 
-    public Boolean ValidTarget(): ShownPosition().DistanceTo(eye + facing * ShownPosition().DistanceTo(eye)) < NodeSize;
+	public Vector ShownPosition(): Node.Position + Up() * 1.3;
+
+	public Boolean ValidTarget(): ShownPosition().DistanceTo(eye + facing * ShownPosition().DistanceTo(eye)) < NodeSize;
 }
 
 struct WorldSegment
 {
-    public Number ID;
-    public Number Node1;
-    public Number Node2;
+	public Number ID;
+	public Number Node1;
+	public Number Node2;
 }
 
 struct Attribute
 {
-    public Number Value;
-    public Number ID;
-    public Number Node1;
-    public Number Node2;
+	public Number Value;
+	public Number ID;
+	public Number Node1;
+	public Number Node2;
 }
 
 globalvar persist WorldNode[] Nodes = [];
@@ -120,30 +120,30 @@ Number AttributeIndexFromID(in Number id): Attributes.Map(attribute => attribute
 
 void RemoveNodeByIndex(Number index) 'Subroutine: Remove node'
 {
-    Nodes.ModRemoveByIndex(index);
+	Nodes.ModRemoveByIndex(index);
 }
 
 void RemoveSegmentByIndex(Number index) 'Subroutine: Remove segment'
 {
-    Segments.ModRemoveByIndex(index);
+	Segments.ModRemoveByIndex(index);
 }
 
 void RemoveAttributeByIndex(Number index) 'Subroutine: Remove attribute'
 {
-    Attributes.ModRemoveByIndex(index);
+	Attributes.ModRemoveByIndex(index);
 }
 
 rule: 'Player init'
 Event.OngoingPlayer
 if (!IsDummyBot())
 {
-    DisallowButton(eventPlayer, Button.PrimaryFire);
-    DisallowButton(eventPlayer, Button.SecondaryFire);
-    DisallowButton(eventPlayer, Button.Ultimate);
-    DisallowButton(eventPlayer, Button.Ability1);
-    DisallowButton(eventPlayer, Button.Ability2);
-    DisallowButton(eventPlayer, Button.Melee);
-    // DisableGameModeHud(eventPlayer);
+	DisallowButton(eventPlayer, Button.PrimaryFire);
+	DisallowButton(eventPlayer, Button.SecondaryFire);
+	DisallowButton(eventPlayer, Button.Ultimate);
+	DisallowButton(eventPlayer, Button.Ability1);
+	DisallowButton(eventPlayer, Button.Ability2);
+	DisallowButton(eventPlayer, Button.Melee);
+	// DisableGameModeHud(eventPlayer);
 }
 
 globalvar persist Vector savedPlayerLocation;
@@ -155,26 +155,26 @@ playervar Vector lastUpdatePosition;
 
 rule: 'Preload nodes'
 {
-    Number preload! = 0;
-    for (preload = 0; 20; 1)
-    {
-        define node: Nodes[host.renderingNodes[EvaluateOnce(preload)]];
-        CreateEffect(
-            EvaluateOnce(preload) < host.renderingNodes.Length ? host : null,
-            Effect.Sphere, node.Color(), node.ShownPosition(), NodeSize, EffectRev.VisibleToPositionRadiusAndColor);
-    }
-    for (preload = 0; 40; 1)
-    {
-        define seg: Segments[host.renderingSegments[EvaluateOnce(preload)]];
-        CreateBeamEffect(
-            UpdateEveryFrame(editorState != EditorState.Node || attributeMode || SelectedSegment != EvaluateOnce(preload) || TotalTimeElapsed() % 1 < 0.5 ? AllPlayers() : null),
-            BeamType.BrigitteFlailChainBeam,
-            Nodes[NodeIndexFromID(seg.Node1)].ShownPosition(),
-            Nodes[NodeIndexFromID(seg.Node2)].ShownPosition(),
-            Color.White,
-            EffectRev.VisibleToPositionAndRadius
-        );
-    }
+	Number preload! = 0;
+	for (preload = 0; 20; 1)
+	{
+		define node: Nodes[host.renderingNodes[EvaluateOnce(preload)]];
+		CreateEffect(
+			EvaluateOnce(preload) < host.renderingNodes.Length ? host : null,
+			Effect.Sphere, node.Color(), node.ShownPosition(), NodeSize, EffectRev.VisibleToPositionRadiusAndColor);
+	}
+	for (preload = 0; 40; 1)
+	{
+		define seg: Segments[host.renderingSegments[EvaluateOnce(preload)]];
+		CreateBeamEffect(
+			UpdateEveryFrame(editorState != EditorState.Node || attributeMode || SelectedSegment != EvaluateOnce(preload) || TotalTimeElapsed() % 1 < 0.5 ? AllPlayers() : null),
+			BeamType.BrigitteFlailChainBeam,
+			Nodes[NodeIndexFromID(seg.Node1)].ShownPosition(),
+			Nodes[NodeIndexFromID(seg.Node2)].ShownPosition(),
+			Color.White,
+			EffectRev.VisibleToPositionAndRadius
+		);
+	}
 }
 
 rule: 'Update rendering nodes'
@@ -184,52 +184,52 @@ if (canModifyMap)
 if (HasSpawned())
 if (!lastUpdatePosition || lastUpdatePosition.DistanceTo(host) > 10)
 {
-    lastUpdatePosition = host.Position();
-    updateRenderingNodes();
-    Wait(3);
-    LoopIfConditionIsTrue();
+	lastUpdatePosition = host.Position();
+	updateRenderingNodes();
+	Wait(3);
+	LoopIfConditionIsTrue();
 }
 
 void updateRenderingNodes() 'Subroutine: Update rendering nodes'
 {
-    // Set the nodes that will be rendered.
-    host.renderingNodes = Nodes.SortedArray(n => n.Node.Position.DistanceTo(host)).Map((n, i) => i);
-    updateRenderingSegments();
+	// Set the nodes that will be rendered.
+	host.renderingNodes = Nodes.SortedArray(n => n.Node.Position.DistanceTo(host)).Map((n, i) => i);
+	updateRenderingSegments();
 }
 
 void updateRenderingSegments() 'Subroutine: Update rendering segments'
 {
-    // Get the unique IDs of the 20 closest nodes.
-    define x = host.renderingNodes.Slice(0, 10).Map(i => Nodes[i].Node.UniqueID);
-    // Set the segments that will be rendered.
-    host.renderingSegments = Segments.FilteredArray(
-        s => x.Contains(s.Node1) || x.Contains(s.Node2)
-    ).Map((s, i) => i);
+	// Get the unique IDs of the 20 closest nodes.
+	define x = host.renderingNodes.Slice(0, 10).Map(i => Nodes[i].Node.UniqueID);
+	// Set the segments that will be rendered.
+	host.renderingSegments = Segments.FilteredArray(
+		s => x.Contains(s.Node1) || x.Contains(s.Node2)
+	).Map((s, i) => i);
 }
 
 rule: 'Snapshot'
 if (!inspector)
 if (canModifyMap)
 {
-    EnableInspectorRecording();
-    # 【◈ How to save & load ◈】
-    # Click the (x) button under the timeline.
-    # 
-    # `                      ↓
-    # •-   ≡   □   □⃩    (x)
-    # 
-    # Save the copied text into a text file. To load it, paste the contents into the first rule in the workshop editor.
-    DisableInspectorRecording();
-    Wait(5);
-    LoopIfConditionIsTrue();
+	EnableInspectorRecording();
+	# 【◈ How to save & load ◈】
+	# Click the (x) button under the timeline.
+	#
+	# `                      ↓
+	# •-   ≡   □   □⃩    (x)
+	#
+	# Save the copied text into a text file. To load it, paste the contents into the first rule in the workshop editor.
+	DisableInspectorRecording();
+	Wait(5);
+	LoopIfConditionIsTrue();
 }
 
 rule: 'Main: Persistant Spawn'
 if (HasSpawned(host))
 if (savedPlayerLocation)
 {
-    host.Teleport(savedPlayerLocation);
-    SetFacing(host, savedPlayerDirection, Relative.ToWorld);
+	host.Teleport(savedPlayerLocation);
+	SetFacing(host, savedPlayerDirection, Relative.ToWorld);
 }
 
 rule: 'Main: Selection loop'
@@ -240,113 +240,113 @@ if (canModifyMap)
 if (savedPlayerLocation != host.Position() || savedPlayerDirection != host.FacingDirection())
 if (Nodes.Length || AllPlayers().IsTrueForAny(player => player.IsDummy()))
 {
-    savedPlayerLocation = host.Position();
-    savedPlayerDirection = host.FacingDirection();
+	savedPlayerLocation = host.Position();
+	savedPlayerDirection = host.FacingDirection();
 
-    // Find player
-    AllPlayers().dummyHighlighted = false;
-    SelectedPlayer = RayCastHitPlayer(eye, eye + facing * 100, AllPlayers(), host, false);
-    SelectedPlayer.dummyHighlighted = true;
+	// Find player
+	AllPlayers().dummyHighlighted = false;
+	SelectedPlayer = RayCastHitPlayer(eye, eye + facing * 100, AllPlayers(), host, false);
+	SelectedPlayer.dummyHighlighted = true;
 
-    // Selected node
-    SelectedNodeIndex = Nodes
-        .Map((node, i) => i)
-        .SortedArray(i => Nodes[i].ShownPosition().DistanceTo(eye))
-        .FilteredArray(i => Nodes[i].ValidTarget())
-        .Append(-1)
-        .First;
-        
-    // Player and node found, choose one.
-    if (SelectedPlayer != null && SelectedNodeIndex != -1)
-    {
-        if (Nodes[SelectedNodeIndex].ShownPosition().DistanceTo(eye) > SelectedPlayer.Position().DistanceTo(eye))
-            SelectedNodeIndex = -1;
-        else
-            SelectedPlayer = null;
-    }
-    
-    Number previouslySelectedNodeID = SelectedNodeID;
-    
-    if (SelectedNodeIndex == -1)
-        SelectedNodeID = -1;
-    else
-        SelectedNodeID = Nodes[SelectedNodeIndex].Node.UniqueID;
+	// Selected node
+	SelectedNodeIndex = Nodes
+		.Map((node, i) => i)
+		.SortedArray(i => Nodes[i].ShownPosition().DistanceTo(eye))
+		.FilteredArray(i => Nodes[i].ValidTarget())
+		.Append(-1)
+		.First;
 
-    if (previouslySelectedNodeID != SelectedNodeID)
-    {
-        UpdateAttributeVisibility();
+	// Player and node found, choose one.
+	if (SelectedPlayer != null && SelectedNodeIndex != -1)
+	{
+		if (Nodes[SelectedNodeIndex].ShownPosition().DistanceTo(eye) > SelectedPlayer.Position().DistanceTo(eye))
+			SelectedNodeIndex = -1;
+		else
+			SelectedPlayer = null;
+	}
 
-        // Get segment that contains both nodes.
-        if (connectingFromNode == -1 || SelectedNodeID == -1)
-            SelectedSegment = -1;
-        else
-        {
-            Number[] tempSegment! = Segments.Map((s, i) => i).FilteredArray(i =>
-                (Segments[i].Node1 == Nodes[SelectedNodeIndex].Node.UniqueID && Segments[i].Node2 == Nodes[connectingFromNode].Node.UniqueID) ||
-                (Segments[i].Node2 == Nodes[SelectedNodeIndex].Node.UniqueID && Segments[i].Node1 == Nodes[connectingFromNode].Node.UniqueID));
-            
-            SelectedSegment = tempSegment == [] ? -1 : tempSegment.First; 
-        }
-    }
+	Number previouslySelectedNodeID = SelectedNodeID;
 
-    Wait(0.1);
-    LoopIfConditionIsTrue();
+	if (SelectedNodeIndex == -1)
+		SelectedNodeID = -1;
+	else
+		SelectedNodeID = Nodes[SelectedNodeIndex].Node.UniqueID;
+
+	if (previouslySelectedNodeID != SelectedNodeID)
+	{
+		UpdateAttributeVisibility();
+
+		// Get segment that contains both nodes.
+		if (connectingFromNode == -1 || SelectedNodeID == -1)
+			SelectedSegment = -1;
+		else
+		{
+			Number[] tempSegment! = Segments.Map((s, i) => i).FilteredArray(i =>
+				(Segments[i].Node1 == Nodes[SelectedNodeIndex].Node.UniqueID && Segments[i].Node2 == Nodes[connectingFromNode].Node.UniqueID) ||
+				(Segments[i].Node2 == Nodes[SelectedNodeIndex].Node.UniqueID && Segments[i].Node1 == Nodes[connectingFromNode].Node.UniqueID));
+
+			SelectedSegment = tempSegment == [] ? -1 : tempSegment.First;
+		}
+	}
+
+	Wait(0.1);
+	LoopIfConditionIsTrue();
 }
 
 public void UpdateAttributeVisibility() 'Subroutine: Update attribute visibility'
 {
-    while (AttributeTexts.Length)
-    {
-        DestroyInWorldText(AttributeTexts.First);
-        AttributeTexts.ModRemoveByIndex(0);
-    }
+	while (AttributeTexts.Length)
+	{
+		DestroyInWorldText(AttributeTexts.First);
+		AttributeTexts.ModRemoveByIndex(0);
+	}
 
-    // Show connected attributes.
-    Number useNode! =
-        SelectedNodeID != -1 ? SelectedNodeID :
-        connectingFromNode != -1 ? Nodes[connectingFromNode].Node.UniqueID : -1;
+	// Show connected attributes.
+	Number useNode! =
+		SelectedNodeID != -1 ? SelectedNodeID :
+		connectingFromNode != -1 ? Nodes[connectingFromNode].Node.UniqueID : -1;
 
-    if (useNode == -1)
-    {
-        return;
-    }
+	if (useNode == -1)
+	{
+		return;
+	}
 
-    define attributeIndices = Attributes.Map((s, i) => i).FilteredArray(
-        i => Attributes[i].Node1 == useNode || Attributes[i].Node2 == useNode
-    );
-    
-    while (attributeIndices.Length)
-    {
-        Vector p1 = Nodes[NodeIndexFromID(Attributes[attributeIndices.First].Node1)].ShownPosition();
-        Vector p2 = Nodes[NodeIndexFromID(Attributes[attributeIndices.First].Node2)].ShownPosition();
-        Boolean isSource = Attributes[attributeIndices.First].Node1 == useNode;
+	define attributeIndices = Attributes.Map((s, i) => i).FilteredArray(
+		i => Attributes[i].Node1 == useNode || Attributes[i].Node2 == useNode
+	);
 
-        define group = attributeIndices.FilteredArray(i =>
-            Attributes[attributeIndices.First].Node1 == Attributes[i].Node1 &&
-            Attributes[attributeIndices.First].Node2 == Attributes[i].Node2
-        );
+	while (attributeIndices.Length)
+	{
+		Vector p1 = Nodes[NodeIndexFromID(Attributes[attributeIndices.First].Node1)].ShownPosition();
+		Vector p2 = Nodes[NodeIndexFromID(Attributes[attributeIndices.First].Node2)].ShownPosition();
+		Boolean isSource = Attributes[attributeIndices.First].Node1 == useNode;
 
-        // Remove from attributeIndices the values in the current group.
-        attributeIndices -= group;
+		define group = attributeIndices.FilteredArray(i =>
+			Attributes[attributeIndices.First].Node1 == Attributes[i].Node1 &&
+			Attributes[attributeIndices.First].Node2 == Attributes[i].Node2
+		);
 
-        // Generate string
-        String string! = '';
-        while (group.Length)
-        {
-            string = <' <0>\n<2><1><2>', string, Attributes[group.First].Value, isSource ? '◈' : ''>;
-            group.ModRemoveByIndex(0);
-        }
+		// Remove from attributeIndices the values in the current group.
+		attributeIndices -= group;
 
-        AttributeTexts += CreateInWorldText(
-            VisibleTo: AllPlayers(),
-            Header: string,
-            Position: p1 + (p2 - p1) * 0.3,
-            Scale: 2.5,
-            Clipping: Clipping.DoNotClip,
-            Reevaluation: InworldTextRev.VisibleTo,
-            TextColor: isSource ? Color.SkyBlue : CustomColor(255, 115, 0, 100)
-        );
-    }
+		// Generate string
+		String string! = '';
+		while (group.Length)
+		{
+			string = <' <0>\n<2><1><2>', string, Attributes[group.First].Value, isSource ? '◈' : ''>;
+			group.ModRemoveByIndex(0);
+		}
+
+		AttributeTexts += CreateInWorldText(
+			VisibleTo: AllPlayers(),
+			Header: string,
+			Position: p1 + (p2 - p1) * 0.3,
+			Scale: 2.5,
+			Clipping: Clipping.DoNotClip,
+			Reevaluation: InworldTextRev.VisibleTo,
+			TextColor: isSource ? Color.SkyBlue : CustomColor(255, 115, 0, 100)
+		);
+	}
 }
 
 playervar Boolean releasePrimary;
@@ -358,7 +358,7 @@ Event.OngoingPlayer
 if (releasePrimary)
 if (!IsButtonHeld(EventPlayer(), Button.PrimaryFire))
 {
-    releasePrimary = !releasePrimary;
+	releasePrimary = !releasePrimary;
 }
 
 rule: 'Release reload'
@@ -366,7 +366,7 @@ Event.OngoingPlayer
 if (releaseReload)
 if (!IsButtonHeld(EventPlayer(), Button.Reload))
 {
-    releaseReload = !releaseReload;
+	releaseReload = !releaseReload;
 }
 
 rule: 'Release Interact'
@@ -374,21 +374,21 @@ Event.OngoingPlayer
 if (releaseInteract)
 if (!IsButtonHeld(EventPlayer(), Button.Interact))
 {
-    releaseInteract = !releaseInteract;
+	releaseInteract = !releaseInteract;
 }
 
 globalvar Number inspector;
 
 void EnableInspector() 'Enable inspector'
 {
-    inspector++;
-    EnableInspectorRecording();
+	inspector++;
+	EnableInspectorRecording();
 }
 
 void DisableInspector() 'Disable inspector'
 {
-    inspector--;
-    if (inspector == 0) {
-        DisableInspectorRecording();
-    }
+	inspector--;
+	if (inspector == 0) {
+		DisableInspectorRecording();
+	}
 }

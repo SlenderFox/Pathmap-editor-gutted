@@ -2,94 +2,94 @@ import 'main.del';
 
 class NumberSelector
 {
-    public Number Value;
+	public Number Value;
 
-    Any numberText;
-    Any decrementText;
-    Any incrementText;
-    Number => void onUpdate;
+	Any numberText;
+	Any decrementText;
+	Any incrementText;
+	Number => void onUpdate;
 
-    public constructor(in Number initialValue, in Number posX, in Number posY, in Boolean visible, in Number => void onUpdate)
-    {
-        Value = initialValue;
-        numberText = createButton(
-            ' {0} '.Format([initialValue]),
-            scale: 2.5,
-            posX: posX,
-            posY: posY,
-            defaultColor: Color.Yellow,
-            interactable: false,
-            visible: visible);
-        incrementText = createButton(
-            '→',
-            primaryAction: [MenuAction.AttributeIncrement, this],
-            secondaryAction: [MenuAction.AttributeIncrementBig, this],
-            scale: 4,
-            posX: posX + 0.1775,
-            posY: posY,
-            visible: visible);
-        decrementText = createButton(
-            '←',
-            primaryAction: [MenuAction.AttributeDecrement, this],
-            secondaryAction: [MenuAction.AttributeDecrementBig, this],
-            scale: 4,
-            posX: posX - 0.1775,
-            posY: posY,
-            visible: visible);
-        
-        this.onUpdate = onUpdate;
-    }
+	public constructor(in Number initialValue, in Number posX, in Number posY, in Boolean visible, in Number => void onUpdate)
+	{
+		Value = initialValue;
+		numberText = createButton(
+			' {0} '.Format([initialValue]),
+			scale: 2.5,
+			posX: posX,
+			posY: posY,
+			defaultColor: Color.Yellow,
+			interactable: false,
+			visible: visible);
+		incrementText = createButton(
+			'→',
+			primaryAction: [MenuAction.AttributeIncrement, this],
+			secondaryAction: [MenuAction.AttributeIncrementBig, this],
+			scale: 4,
+			posX: posX + 0.1775,
+			posY: posY,
+			visible: visible);
+		decrementText = createButton(
+			'←',
+			primaryAction: [MenuAction.AttributeDecrement, this],
+			secondaryAction: [MenuAction.AttributeDecrementBig, this],
+			scale: 4,
+			posX: posX - 0.1775,
+			posY: posY,
+			visible: visible);
 
-    public void SetVisible(in Boolean visible)
-    {
-        SetVisible(numberText, visible);
-        SetVisible(incrementText, visible);
-        SetVisible(decrementText, visible);
-    }
+		this.onUpdate = onUpdate;
+	}
 
-    public void SetInteractable(in Boolean interactable)
-    {
-        SetInteractabilityAndColor(numberText, interactable, interactable ? Color.Yellow : CustomColor(112, 101, 0, 140));
-        SetInteractabilityAndColor(incrementText, interactable, interactable ? Color.White : CustomColor(217, 217, 217, 69));
-        SetInteractabilityAndColor(decrementText, interactable, interactable ? Color.White : CustomColor(217, 217, 217, 69));
-    }
+	public void SetVisible(in Boolean visible)
+	{
+		SetVisible(numberText, visible);
+		SetVisible(incrementText, visible);
+		SetVisible(decrementText, visible);
+	}
 
-    public void Add(in Number amount)
-    {
-        Value += amount;
-        Update();
-    }
+	public void SetInteractable(in Boolean interactable)
+	{
+		SetInteractabilityAndColor(numberText, interactable, interactable ? Color.Yellow : CustomColor(112, 101, 0, 140));
+		SetInteractabilityAndColor(incrementText, interactable, interactable ? Color.White : CustomColor(217, 217, 217, 69));
+		SetInteractabilityAndColor(decrementText, interactable, interactable ? Color.White : CustomColor(217, 217, 217, 69));
+	}
 
-    public void Set(in Number value)
-    {
-        Value = value;
-        Update();
-    }
+	public void Add(in Number amount)
+	{
+		Value += amount;
+		Update();
+	}
 
-    void Update()
-    {
-        SetLabel(numberText, ' {0} '.Format([Value]));
-        onUpdate(Value);
-    }
+	public void Set(in Number value)
+	{
+		Value = value;
+		Update();
+	}
 
-    public void Dispose()
-    {
-        DestroyButton(numberText);
-        DestroyButton(incrementText);
-        DestroyButton(decrementText);
-        delete this;
-    }
+	void Update()
+	{
+		SetLabel(numberText, ' {0} '.Format([Value]));
+		onUpdate(Value);
+	}
+
+	public void Dispose()
+	{
+		DestroyButton(numberText);
+		DestroyButton(incrementText);
+		DestroyButton(decrementText);
+		delete this;
+	}
 }
 
 rule: 'CM: Number selector: Update'
 Event.OngoingPlayer
 if ([MenuAction.AttributeIncrement, MenuAction.AttributeIncrementBig, MenuAction.AttributeDecrement, MenuAction.AttributeDecrementBig]
-    .Contains(cm_currActionID[0]))
+	.Contains(cm_currActionID[0]))
 {
-    (<NumberSelector>cm_currActionID[1]).Add(
-        [1,5,-1,-5][
-            [MenuAction.AttributeIncrement, MenuAction.AttributeIncrementBig, MenuAction.AttributeDecrement, MenuAction.AttributeDecrementBig]
-                .IndexOf(cm_currActionID[0])
-        ]
-    );
+	(<NumberSelector>cm_currActionID[1]).Add(
+		[1,5,-1,-5][
+			[MenuAction.AttributeIncrement, MenuAction.AttributeIncrementBig, MenuAction.AttributeDecrement, MenuAction.AttributeDecrementBig]
+				.IndexOf(cm_currActionID[0])
+		]
+	);
 }

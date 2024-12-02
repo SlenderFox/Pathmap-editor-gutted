@@ -4,19 +4,19 @@ import 'main.del';
 
 struct CursorMenuButton
 {
-    public String Label; // [0] *
-    public Any PrimaryAction; // [1]
-    public Any SecondaryAction; // [2]
-    public Number PosX; // [4]
-    public Number PosY; // [5]
-    public Number ClickWidth; // [6]
-    public Number ClickHeight; // [7]
-    public Color DefaultColor; // [8]
-    public Color HoverColor; // [9]
-    // [10] == use default font?
-    public Boolean Interactable; // [11]
-    public Boolean Visible; // [12] (NOTICE: only used in debug clickWidth/height visual right now)
-    public Number ID;
+	public String Label; // [0] *
+	public Any PrimaryAction; // [1]
+	public Any SecondaryAction; // [2]
+	public Number PosX; // [4]
+	public Number PosY; // [5]
+	public Number ClickWidth; // [6]
+	public Number ClickHeight; // [7]
+	public Color DefaultColor; // [8]
+	public Color HoverColor; // [9]
+	// [10] == use default font?
+	public Boolean Interactable; // [11]
+	public Boolean Visible; // [12] (NOTICE: only used in debug clickWidth/height visual right now)
+	public Number ID;
 }
 
 globalvar Number cm_uniqueButtonID!; // Assigns each button a unique value :D
@@ -42,12 +42,12 @@ String cm_c_verticalLine: "┃\n"; // ext global [4]
 rule: "▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒【Josbird's Cursor Menu】▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒" {}
 rule: "Global init"
 {
-    cm_s_menuWidth = WorkshopSettingReal("Josbird's Cursor Menu", "Menu Width", 5, 0, 10, 1);
-    cm_s_menuHeight = WorkshopSettingReal("Josbird's Cursor Menu", "Menu Height", 2.5, 0, 5, 2);
-    cm_s_buttonClickSounds = WorkshopSettingToggle("Josbird's Cursor Menu", "Button click sounds", true, 3);
-    cm_s_debugMode = WorkshopSettingToggle("Josbird's Cursor Menu", "Debug mode (show button click areas)", false, 4);
-    cm_s_disableGameHud = WorkshopSettingToggle("Josbird's Cursor Menu", "Menu disables game hud", true, 7);
-    cm_exitButtonProperties = ["exit menu", cm_s_menuWidth / 2 - 0.15, cm_s_menuHeight / 2 - 0.15, 0.35];
+	cm_s_menuWidth = WorkshopSettingReal("Josbird's Cursor Menu", "Menu Width", 5, 0, 10, 1);
+	cm_s_menuHeight = WorkshopSettingReal("Josbird's Cursor Menu", "Menu Height", 2.5, 0, 5, 2);
+	cm_s_buttonClickSounds = WorkshopSettingToggle("Josbird's Cursor Menu", "Button click sounds", true, 3);
+	cm_s_debugMode = WorkshopSettingToggle("Josbird's Cursor Menu", "Debug mode (show button click areas)", false, 4);
+	cm_s_disableGameHud = WorkshopSettingToggle("Josbird's Cursor Menu", "Menu disables game hud", true, 7);
+	cm_exitButtonProperties = ["exit menu", cm_s_menuWidth / 2 - 0.15, cm_s_menuHeight / 2 - 0.15, 0.35];
 }
 
 Number ButtonIndexFromID(Number id, Player player = EventPlayer()): player.cm_buttons.Map(button => button.ID).IndexOf(id);
@@ -55,25 +55,25 @@ Number ButtonIndexFromID(Number id, Player player = EventPlayer()): player.cm_bu
 Number NextButtonId(): cm_uniqueButtonID + 1;
 
 Number createButton(
-    in String label = null,
-    in Any primaryAction = 0,
-    in Any secondaryAction = 0,
-    in Number scale = 1.75,
-    in Number posX = 0,
-    in Number posY = 0,
-    in Number clickWidth = 0.2,
-    in Number clickHeight = 0.2,
-    in Color defaultColor = Color.White,
-    in Color hoverColor = Color.Blue,
-    in Boolean interactable = true,
-    in Boolean visible = true
+	in String label = null,
+	in Any primaryAction = 0,
+	in Any secondaryAction = 0,
+	in Number scale = 1.75,
+	in Number posX = 0,
+	in Number posY = 0,
+	in Number clickWidth = 0.2,
+	in Number clickHeight = 0.2,
+	in Color defaultColor = Color.White,
+	in Color hoverColor = Color.Blue,
+	in Boolean interactable = true,
+	in Boolean visible = true
 ) {
-    return __createButtonSubroutine([label, primaryAction, secondaryAction, posX, posY, clickWidth, clickHeight, defaultColor, hoverColor, interactable, visible]);
+	return __createButtonSubroutine([label, primaryAction, secondaryAction, posX, posY, clickWidth, clickHeight, defaultColor, hoverColor, interactable, visible]);
 }
 
 # Creates a button. This overload replaces the `primaryAction` and `secondaryAction` parameters with
 # the `Boolean => void onClick` parameter. The `onClick` function will be executed the button is clicked.
-# 
+#
 # Example:
 # ```
 # define button = createButton(label: 'It\'s a wonderful world', onClick: wasSecondary => {
@@ -95,118 +95,118 @@ Number createButton(
 # -`interactable`: Can the button be clicked?
 # -`visible`: Is the button visible?
 Number createButton(
-    in String label,
-    in Boolean => void onClick,
-    in Number posX = 0,
-    in Number posY = 0,
-    in Number clickWidth = 0.2,
-    in Number clickHeight = 0.2,
-    in Color defaultColor = Color.White,
-    in Color hoverColor = Color.Blue,
-    in Boolean interactable = true,
-    in Boolean visible = true
+	in String label,
+	in Boolean => void onClick,
+	in Number posX = 0,
+	in Number posY = 0,
+	in Number clickWidth = 0.2,
+	in Number clickHeight = 0.2,
+	in Color defaultColor = Color.White,
+	in Color hoverColor = Color.Blue,
+	in Boolean interactable = true,
+	in Boolean visible = true
 ) {
-    // The click events for the button created here are handled by the 'CM: Func Primary' and 'CM: Func Secondary' rules.
-    return __createButtonSubroutine([label, [MenuAction.FuncPrimary, onClick], [MenuAction.FuncSecondary, onClick], posX, posY, clickWidth, clickHeight, defaultColor, hoverColor, interactable, visible]);
+	// The click events for the button created here are handled by the 'CM: Func Primary' and 'CM: Func Secondary' rules.
+	return __createButtonSubroutine([label, [MenuAction.FuncPrimary, onClick], [MenuAction.FuncSecondary, onClick], posX, posY, clickWidth, clickHeight, defaultColor, hoverColor, interactable, visible]);
 }
 
 Number __createButtonSubroutine(Any[] input) "CM: Create button"
 {
-    cm_uniqueButtonID++;
+	cm_uniqueButtonID++;
 
-    define label: input[0]; define primaryAction: input[1]; define secondaryAction: input[2]; define posX: input[3]; define posY: input[4]; define clickWidth: input[5];
-    define clickHeight: input[6]; define defaultColor: input[7]; define hoverColor: input[8]; define interactable: input[9]; define visible: input[10];
+	define label: input[0]; define primaryAction: input[1]; define secondaryAction: input[2]; define posX: input[3]; define posY: input[4]; define clickWidth: input[5];
+	define clickHeight: input[6]; define defaultColor: input[7]; define hoverColor: input[8]; define interactable: input[9]; define visible: input[10];
 
-    cm_buttons += { Label: label, PrimaryAction: [primaryAction], SecondaryAction: [secondaryAction], PosX: posX, PosY: posY, ClickWidth: clickWidth,
-        ClickHeight: clickHeight, DefaultColor: defaultColor, HoverColor: hoverColor, Interactable: interactable, Visible: visible, ID: cm_uniqueButtonID };
+	cm_buttons += { Label: label, PrimaryAction: [primaryAction], SecondaryAction: [secondaryAction], PosX: posX, PosY: posY, ClickWidth: clickWidth,
+		ClickHeight: clickHeight, DefaultColor: defaultColor, HoverColor: hoverColor, Interactable: interactable, Visible: visible, ID: cm_uniqueButtonID };
 
-    return cm_uniqueButtonID;
+	return cm_uniqueButtonID;
 }
 
 rule: 'CM: Host Just-In-Time Preload Optimization'
 Event.OngoingPlayer
 if (EventPlayer() == HostPlayer())
 {
-    for (define i! = 0; 50; 1) {
-        Number index: EvaluateOnce(i);
+	for (define i! = 0; 50; 1) {
+		Number index: EvaluateOnce(i);
 
-        CreateInWorldText(
-            VisibleTo: UpdateEveryFrame(cm_isInMenu && index < cm_buttons.Length ? EventPlayer() : null),
-            Header: UpdateEveryFrame(cm_buttons[index].Label),
-            Position: UpdateEveryFrame(
-                EyePosition() + 100 * (
-                    cm_buttons[index].PosX * CrossProduct(
-                        FacingDirectionOf(),
-                        DirectionFromAngles(
-                            HorizontalAngleFromDirection(FacingDirectionOf()),
-                            VerticalAngleFromDirection(FacingDirectionOf()) - 90
-                        )
-                    ) + (cm_buttons[index].PosY - 0.2) * DirectionFromAngles(
-                            HorizontalAngleFromDirection(FacingDirectionOf()),
-                            VerticalAngleFromDirection(FacingDirectionOf()) - 90
-                    ) + 3 * FacingDirectionOf()
-                )
-            ),
-            Scale: 2.8,
-            Clipping: Clipping.DoNotClip,
-            Reevaluation: InworldTextRev.VisibleToPositionStringAndColor,
-            TextColor: cm_buttons[index].Interactable
-                && AbsoluteValue(AngleDifference(
-                    HorizontalAngleFromDirection(FacingDirectionOf()),
-                    HorizontalAngleFromDirection(cm_menuOriginalFacing)
-                ) - cm_buttons[index].PosX) <= cm_buttons[index].ClickWidth / 2
-                && AbsoluteValue(AngleDifference(
-                    VerticalAngleFromDirection(FacingDirectionOf()),
-                    VerticalAngleFromDirection(cm_menuOriginalFacing)
-                ) - cm_buttons[index].PosY) <= cm_buttons[index].ClickHeight / 2
-                ? cm_buttons[index].HoverColor : cm_buttons[index].DefaultColor,
-                Spectators.DefaultVisibility
-        );
-        MinWait();
-    }
-    cm_menuFrame = [];
-    createCursor();
-    MinWait();
-    createBorderCorners();
-    createBorderEdges();
+		CreateInWorldText(
+			VisibleTo: UpdateEveryFrame(cm_isInMenu && index < cm_buttons.Length ? EventPlayer() : null),
+			Header: UpdateEveryFrame(cm_buttons[index].Label),
+			Position: UpdateEveryFrame(
+				EyePosition() + 100 * (
+					cm_buttons[index].PosX * CrossProduct(
+						FacingDirectionOf(),
+						DirectionFromAngles(
+							HorizontalAngleFromDirection(FacingDirectionOf()),
+							VerticalAngleFromDirection(FacingDirectionOf()) - 90
+						)
+					) + (cm_buttons[index].PosY - 0.2) * DirectionFromAngles(
+							HorizontalAngleFromDirection(FacingDirectionOf()),
+							VerticalAngleFromDirection(FacingDirectionOf()) - 90
+					) + 3 * FacingDirectionOf()
+				)
+			),
+			Scale: 2.8,
+			Clipping: Clipping.DoNotClip,
+			Reevaluation: InworldTextRev.VisibleToPositionStringAndColor,
+			TextColor: cm_buttons[index].Interactable
+				&& AbsoluteValue(AngleDifference(
+					HorizontalAngleFromDirection(FacingDirectionOf()),
+					HorizontalAngleFromDirection(cm_menuOriginalFacing)
+				) - cm_buttons[index].PosX) <= cm_buttons[index].ClickWidth / 2
+				&& AbsoluteValue(AngleDifference(
+					VerticalAngleFromDirection(FacingDirectionOf()),
+					VerticalAngleFromDirection(cm_menuOriginalFacing)
+				) - cm_buttons[index].PosY) <= cm_buttons[index].ClickHeight / 2
+				? cm_buttons[index].HoverColor : cm_buttons[index].DefaultColor,
+				Spectators.DefaultVisibility
+		);
+		MinWait();
+	}
+	cm_menuFrame = [];
+	createCursor();
+	MinWait();
+	createBorderCorners();
+	createBorderEdges();
 }
 
 void DestroyButton(Number buttonID) "CM: Destroy button"
 {
-    Number removeButtonIndex = ButtonIndexFromID(buttonID);
-    cm_buttons.ModRemoveByIndex(removeButtonIndex);
+	Number removeButtonIndex = ButtonIndexFromID(buttonID);
+	cm_buttons.ModRemoveByIndex(removeButtonIndex);
 }
 
 void SetLabel(in Number buttonID, in String label)
 {
-    cm_buttons[ButtonIndexFromID(buttonID)].Label = label;
+	cm_buttons[ButtonIndexFromID(buttonID)].Label = label;
 }
 
 void SetColor(in Number buttonID, in Color color)
 {
-    cm_buttons[ButtonIndexFromID(buttonID)].DefaultColor = color;
+	cm_buttons[ButtonIndexFromID(buttonID)].DefaultColor = color;
 }
 
 void SetPosY(in Number buttonID, in Number posY)
 {
-    cm_buttons[ButtonIndexFromID(buttonID)].PosY = posY;
+	cm_buttons[ButtonIndexFromID(buttonID)].PosY = posY;
 }
 
 void SetInteractability(in Number buttonID, in Boolean interactable, in Player player = EventPlayer())
 {
-    player.cm_buttons[ButtonIndexFromID(buttonID, player)].Interactable = interactable;
+	player.cm_buttons[ButtonIndexFromID(buttonID, player)].Interactable = interactable;
 }
 
 void SetInteractabilityAndColor(in Number buttonID, in Boolean interactable, in Color color, in Player player = EventPlayer())
 {
-    Number buttonIndex! = ButtonIndexFromID(buttonID, player);
-    player.cm_buttons[buttonIndex].Interactable = interactable;
-    player.cm_buttons[buttonIndex].DefaultColor = color;
+	Number buttonIndex! = ButtonIndexFromID(buttonID, player);
+	player.cm_buttons[buttonIndex].Interactable = interactable;
+	player.cm_buttons[buttonIndex].DefaultColor = color;
 }
 
 void SetVisible(in Number buttonID, in Boolean visible)
 {
-    cm_buttons[ButtonIndexFromID(buttonID)].Visible = visible;
+	cm_buttons[ButtonIndexFromID(buttonID)].Visible = visible;
 }
 
 rule: "Toggle menu"
@@ -218,80 +218,80 @@ if (!popupWindowVisible)
 if (!releaseInteract)
 if (canModifyMap)
 {
-    cm_isInMenu = !cm_isInMenu;
+	cm_isInMenu = !cm_isInMenu;
 }
 
 void createCursor() "Create menu cursor"
 {
-    cm_menuFrame += CreateInWorldText(FilteredArray(EventPlayer(), cm_isInMenu && TotalTimeElapsed() % 0.032 < 0.016), "▲", UpdateEveryFrame(EyePosition(EventPlayer()) + 100 * (AngleDifference(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), HorizontalAngleFromDirection(cm_menuOriginalFacing)) * CrossProduct(FacingDirectionOf(EventPlayer()), DirectionFromAngles(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())) - 90)) + (AngleDifference(VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(cm_menuOriginalFacing)) - 0.2) * DirectionFromAngles(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())) - 90) + 3 * FacingDirectionOf(EventPlayer()))), 3, Clipping.DoNotClip, InworldTextRev.VisibleToPositionStringAndColor, Color.White, Spectators.DefaultVisibility);
-    cm_menuFrame += CreateInWorldText(FilteredArray(EventPlayer(), cm_isInMenu && TotalTimeElapsed() % 0.032 >= 0.016), "▲", UpdateEveryFrame(EyePosition(EventPlayer()) + 100 * (AngleDifference(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), HorizontalAngleFromDirection(cm_menuOriginalFacing)) * CrossProduct(FacingDirectionOf(EventPlayer()), DirectionFromAngles(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())) - 90)) + (AngleDifference(VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(cm_menuOriginalFacing)) - 0.2) * DirectionFromAngles(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())) - 90) + 3 * FacingDirectionOf(EventPlayer()))), 3, Clipping.DoNotClip, InworldTextRev.VisibleToPositionStringAndColor, Color.White, Spectators.DefaultVisibility);
+	cm_menuFrame += CreateInWorldText(FilteredArray(EventPlayer(), cm_isInMenu && TotalTimeElapsed() % 0.032 < 0.016), "▲", UpdateEveryFrame(EyePosition(EventPlayer()) + 100 * (AngleDifference(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), HorizontalAngleFromDirection(cm_menuOriginalFacing)) * CrossProduct(FacingDirectionOf(EventPlayer()), DirectionFromAngles(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())) - 90)) + (AngleDifference(VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(cm_menuOriginalFacing)) - 0.2) * DirectionFromAngles(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())) - 90) + 3 * FacingDirectionOf(EventPlayer()))), 3, Clipping.DoNotClip, InworldTextRev.VisibleToPositionStringAndColor, Color.White, Spectators.DefaultVisibility);
+	cm_menuFrame += CreateInWorldText(FilteredArray(EventPlayer(), cm_isInMenu && TotalTimeElapsed() % 0.032 >= 0.016), "▲", UpdateEveryFrame(EyePosition(EventPlayer()) + 100 * (AngleDifference(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), HorizontalAngleFromDirection(cm_menuOriginalFacing)) * CrossProduct(FacingDirectionOf(EventPlayer()), DirectionFromAngles(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())) - 90)) + (AngleDifference(VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(cm_menuOriginalFacing)) - 0.2) * DirectionFromAngles(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())) - 90) + 3 * FacingDirectionOf(EventPlayer()))), 3, Clipping.DoNotClip, InworldTextRev.VisibleToPositionStringAndColor, Color.White, Spectators.DefaultVisibility);
 }
 
 void createBorderCorners() "Create menu border corners"
 {
-    cm_menuFrame += CreateInWorldText(cm_isInMenu ? EventPlayer() : null, "┌", <Vector>UpdateEveryFrame(EyePosition(EventPlayer()) + 100 * (cm_s_menuWidth * -1 / 2 * CrossProduct(FacingDirectionOf(EventPlayer()), DirectionFromAngles(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())) - 90)) + (cm_s_menuHeight / 2 - 0.2) * DirectionFromAngles(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())) - 90) + 3 * FacingDirectionOf(EventPlayer()))), 4, Clipping.DoNotClip, InworldTextRev.VisibleToAndPosition, Color.White, Spectators.DefaultVisibility);
-    cm_menuFrame += CreateInWorldText(cm_isInMenu ? EventPlayer() : null, "┐", <Vector>UpdateEveryFrame(EyePosition(EventPlayer()) + 100 * (cm_s_menuWidth / 2 * CrossProduct(FacingDirectionOf(EventPlayer()), DirectionFromAngles(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())) - 90)) + (cm_s_menuHeight / 2 - 0.2) * DirectionFromAngles(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())) - 90) + 3 * FacingDirectionOf(EventPlayer()))), 4, Clipping.DoNotClip, InworldTextRev.VisibleToAndPosition, Color.White, Spectators.DefaultVisibility);
-    cm_menuFrame += CreateInWorldText(cm_isInMenu ? EventPlayer() : null, "└", <Vector>UpdateEveryFrame(EyePosition(EventPlayer()) + 100 * (cm_s_menuWidth * -1 / 2 * CrossProduct(FacingDirectionOf(EventPlayer()), DirectionFromAngles(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())) - 90)) + (cm_s_menuHeight * -1 / 2 - 0.2) * DirectionFromAngles(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())) - 90) + 3 * FacingDirectionOf(EventPlayer()))), 4, Clipping.DoNotClip, InworldTextRev.VisibleToAndPosition, Color.White, Spectators.DefaultVisibility);
-    cm_menuFrame += CreateInWorldText(cm_isInMenu ? EventPlayer() : null, "┘", <Vector>UpdateEveryFrame(EyePosition(EventPlayer()) + 100 * (cm_s_menuWidth / 2 * CrossProduct(FacingDirectionOf(EventPlayer()), DirectionFromAngles(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())) - 90)) + (cm_s_menuHeight * -1 / 2 - 0.2) * DirectionFromAngles(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())) - 90) + 3 * FacingDirectionOf(EventPlayer()))), 4, Clipping.DoNotClip, InworldTextRev.VisibleToAndPosition, Color.White, Spectators.DefaultVisibility);
+	cm_menuFrame += CreateInWorldText(cm_isInMenu ? EventPlayer() : null, "┌", <Vector>UpdateEveryFrame(EyePosition(EventPlayer()) + 100 * (cm_s_menuWidth * -1 / 2 * CrossProduct(FacingDirectionOf(EventPlayer()), DirectionFromAngles(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())) - 90)) + (cm_s_menuHeight / 2 - 0.2) * DirectionFromAngles(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())) - 90) + 3 * FacingDirectionOf(EventPlayer()))), 4, Clipping.DoNotClip, InworldTextRev.VisibleToAndPosition, Color.White, Spectators.DefaultVisibility);
+	cm_menuFrame += CreateInWorldText(cm_isInMenu ? EventPlayer() : null, "┐", <Vector>UpdateEveryFrame(EyePosition(EventPlayer()) + 100 * (cm_s_menuWidth / 2 * CrossProduct(FacingDirectionOf(EventPlayer()), DirectionFromAngles(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())) - 90)) + (cm_s_menuHeight / 2 - 0.2) * DirectionFromAngles(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())) - 90) + 3 * FacingDirectionOf(EventPlayer()))), 4, Clipping.DoNotClip, InworldTextRev.VisibleToAndPosition, Color.White, Spectators.DefaultVisibility);
+	cm_menuFrame += CreateInWorldText(cm_isInMenu ? EventPlayer() : null, "└", <Vector>UpdateEveryFrame(EyePosition(EventPlayer()) + 100 * (cm_s_menuWidth * -1 / 2 * CrossProduct(FacingDirectionOf(EventPlayer()), DirectionFromAngles(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())) - 90)) + (cm_s_menuHeight * -1 / 2 - 0.2) * DirectionFromAngles(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())) - 90) + 3 * FacingDirectionOf(EventPlayer()))), 4, Clipping.DoNotClip, InworldTextRev.VisibleToAndPosition, Color.White, Spectators.DefaultVisibility);
+	cm_menuFrame += CreateInWorldText(cm_isInMenu ? EventPlayer() : null, "┘", <Vector>UpdateEveryFrame(EyePosition(EventPlayer()) + 100 * (cm_s_menuWidth / 2 * CrossProduct(FacingDirectionOf(EventPlayer()), DirectionFromAngles(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())) - 90)) + (cm_s_menuHeight * -1 / 2 - 0.2) * DirectionFromAngles(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())) - 90) + 3 * FacingDirectionOf(EventPlayer()))), 4, Clipping.DoNotClip, InworldTextRev.VisibleToAndPosition, Color.White, Spectators.DefaultVisibility);
 }
 
 void createBorderEdges() "Create menu border edges"
 {
-    String stringBuilder = "";
-    for (cm_i = 0; 4.6 * cm_s_menuWidth - 1; 1)
-        stringBuilder = "{0}{1}".Format([stringBuilder, cm_c_horizontalLine]);
-    
-    cm_menuFrame += MakeHorizontalLine(stringBuilder, 1);
-    cm_menuFrame += MakeHorizontalLine(stringBuilder, -1);
+	String stringBuilder = "";
+	for (cm_i = 0; 4.6 * cm_s_menuWidth - 1; 1)
+		stringBuilder = "{0}{1}".Format([stringBuilder, cm_c_horizontalLine]);
 
-    stringBuilder = "";
-    for (cm_i = 0.3; cm_s_menuHeight; 0.3)
-        stringBuilder = "{0}{1}".Format([stringBuilder, cm_c_verticalLine]);
+	cm_menuFrame += MakeHorizontalLine(stringBuilder, 1);
+	cm_menuFrame += MakeHorizontalLine(stringBuilder, -1);
 
-    cm_menuFrame += MakeVerticalLine(stringBuilder, 1);
-    cm_menuFrame += MakeVerticalLine(stringBuilder, -1);
+	stringBuilder = "";
+	for (cm_i = 0.3; cm_s_menuHeight; 0.3)
+		stringBuilder = "{0}{1}".Format([stringBuilder, cm_c_verticalLine]);
+
+	cm_menuFrame += MakeVerticalLine(stringBuilder, 1);
+	cm_menuFrame += MakeVerticalLine(stringBuilder, -1);
 }
 
 Any MakeHorizontalLine(in String str, in Number multiplier)
 {
-    return CreateInWorldText(
-        cm_isInMenu ? EventPlayer() : null,
-        str,
-        <Vector>UpdateEveryFrame(EyePosition(EventPlayer()) + 100 * ((cm_s_menuHeight * multiplier / 2 - 0.2) * DirectionFromAngles(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())) - 90) + 3 * FacingDirectionOf(EventPlayer()))),
-        4,
-        Clipping.DoNotClip,
-        InworldTextRev.VisibleToAndPosition,
-        Color.White,
-        Spectators.DefaultVisibility
-    );
+	return CreateInWorldText(
+		cm_isInMenu ? EventPlayer() : null,
+		str,
+		<Vector>UpdateEveryFrame(EyePosition(EventPlayer()) + 100 * ((cm_s_menuHeight * multiplier / 2 - 0.2) * DirectionFromAngles(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())) - 90) + 3 * FacingDirectionOf(EventPlayer()))),
+		4,
+		Clipping.DoNotClip,
+		InworldTextRev.VisibleToAndPosition,
+		Color.White,
+		Spectators.DefaultVisibility
+	);
 }
 
 Any MakeVerticalLine(in String str, in Number multiplier) {
-    return CreateInWorldText(
-        cm_isInMenu ? EventPlayer() : null,
-        str,
-        <Vector>UpdateEveryFrame(EyePosition(EventPlayer()) + 100 * (cm_s_menuWidth * multiplier / 2 * CrossProduct(FacingDirectionOf(EventPlayer()), DirectionFromAngles(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())) - 90)) + (-0.095 * RoundToInteger(cm_s_menuHeight / 0.3, Rounding.Down) - 0.2) * DirectionFromAngles(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())) - 90) + 3 * FacingDirectionOf(EventPlayer()))),
-        4,
-        Clipping.DoNotClip,
-        InworldTextRev.VisibleToAndPosition,
-        Color.White,
-        Spectators.DefaultVisibility
-    );
+	return CreateInWorldText(
+		cm_isInMenu ? EventPlayer() : null,
+		str,
+		<Vector>UpdateEveryFrame(EyePosition(EventPlayer()) + 100 * (cm_s_menuWidth * multiplier / 2 * CrossProduct(FacingDirectionOf(EventPlayer()), DirectionFromAngles(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())) - 90)) + (-0.095 * RoundToInteger(cm_s_menuHeight / 0.3, Rounding.Down) - 0.2) * DirectionFromAngles(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())) - 90) + 3 * FacingDirectionOf(EventPlayer()))),
+		4,
+		Clipping.DoNotClip,
+		InworldTextRev.VisibleToAndPosition,
+		Color.White,
+		Spectators.DefaultVisibility
+	);
 }
 
 void createExitButton() "Create exit button"
 {
-    CreateIcon(canModifyMap ? EventPlayer() : null, <Vector>UpdateEveryFrame(EyePosition(EventPlayer()) + 100 * (cm_exitButtonProperties[1] * CrossProduct(FacingDirectionOf(EventPlayer()), DirectionFromAngles(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())) - 90)) + (cm_exitButtonProperties[2] - 0.25) * DirectionFromAngles(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())) - 90) + 3 * FacingDirectionOf(EventPlayer()))), Icon.X, IconRev.VisibleToPositionAndColor, AbsoluteValue(AngleDifference(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), HorizontalAngleFromDirection(cm_menuOriginalFacing)) - cm_exitButtonProperties[1]) <= cm_exitButtonProperties[3] / 2 && AbsoluteValue(AngleDifference(VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(cm_menuOriginalFacing)) - cm_exitButtonProperties[2]) <= cm_exitButtonProperties[3] / 2 ? Color.Yellow : Color.Red, false);
-    cm_exitIconEntity = LastCreatedEntity();
+	CreateIcon(canModifyMap ? EventPlayer() : null, <Vector>UpdateEveryFrame(EyePosition(EventPlayer()) + 100 * (cm_exitButtonProperties[1] * CrossProduct(FacingDirectionOf(EventPlayer()), DirectionFromAngles(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())) - 90)) + (cm_exitButtonProperties[2] - 0.25) * DirectionFromAngles(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())) - 90) + 3 * FacingDirectionOf(EventPlayer()))), Icon.X, IconRev.VisibleToPositionAndColor, AbsoluteValue(AngleDifference(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), HorizontalAngleFromDirection(cm_menuOriginalFacing)) - cm_exitButtonProperties[1]) <= cm_exitButtonProperties[3] / 2 && AbsoluteValue(AngleDifference(VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(cm_menuOriginalFacing)) - cm_exitButtonProperties[2]) <= cm_exitButtonProperties[3] / 2 ? Color.Yellow : Color.Red, false);
+	cm_exitIconEntity = LastCreatedEntity();
 }
 
 void createClickAreas() "Create click areas"
 {
-    for (cm_i = 0; cm_buttons.Length; 1)
-    {
-        cm_menuFrame += CreateInWorldText(EventPlayer(), "┌", <Vector>UpdateEveryFrame(EyePosition(EventPlayer()) + 100 * ((cm_buttons[EvaluateOnce(cm_i)].PosX - cm_buttons[EvaluateOnce(cm_i)].ClickWidth / 2) * CrossProduct(FacingDirectionOf(EventPlayer()), DirectionFromAngles(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())) - 90)) + (cm_buttons[EvaluateOnce(cm_i)].PosY + cm_buttons[EvaluateOnce(cm_i)].ClickHeight / 2 - 0.2) * DirectionFromAngles(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())) - 90) + 3 * FacingDirectionOf(EventPlayer()))), 2, Clipping.DoNotClip, InworldTextRev.VisibleToAndPosition, !cm_buttons[EvaluateOnce(cm_i)].Visible ? CustomColor(0, 0, 0, 0) : cm_buttons[EvaluateOnce(cm_i)].Interactable ? Color.Yellow : Color.White, Spectators.DefaultVisibility);        
-        cm_menuFrame += CreateInWorldText(EventPlayer(), "┘", <Vector>UpdateEveryFrame(EyePosition(EventPlayer()) + 100 * ((cm_buttons[EvaluateOnce(cm_i)].PosX + cm_buttons[EvaluateOnce(cm_i)].ClickWidth / 2) * CrossProduct(FacingDirectionOf(EventPlayer()), DirectionFromAngles(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())) - 90)) + (cm_buttons[EvaluateOnce(cm_i)].PosY - cm_buttons[EvaluateOnce(cm_i)].ClickHeight / 2 - 0.2) * DirectionFromAngles(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())) - 90) + 3 * FacingDirectionOf(EventPlayer()))), 2, Clipping.DoNotClip, InworldTextRev.VisibleToAndPosition, !cm_buttons[EvaluateOnce(cm_i)].Visible ? CustomColor(0, 0, 0, 0) : cm_buttons[EvaluateOnce(cm_i)].Interactable ? Color.Yellow : Color.White, Spectators.DefaultVisibility);
-    }
+	for (cm_i = 0; cm_buttons.Length; 1)
+	{
+		cm_menuFrame += CreateInWorldText(EventPlayer(), "┌", <Vector>UpdateEveryFrame(EyePosition(EventPlayer()) + 100 * ((cm_buttons[EvaluateOnce(cm_i)].PosX - cm_buttons[EvaluateOnce(cm_i)].ClickWidth / 2) * CrossProduct(FacingDirectionOf(EventPlayer()), DirectionFromAngles(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())) - 90)) + (cm_buttons[EvaluateOnce(cm_i)].PosY + cm_buttons[EvaluateOnce(cm_i)].ClickHeight / 2 - 0.2) * DirectionFromAngles(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())) - 90) + 3 * FacingDirectionOf(EventPlayer()))), 2, Clipping.DoNotClip, InworldTextRev.VisibleToAndPosition, !cm_buttons[EvaluateOnce(cm_i)].Visible ? CustomColor(0, 0, 0, 0) : cm_buttons[EvaluateOnce(cm_i)].Interactable ? Color.Yellow : Color.White, Spectators.DefaultVisibility);
+		cm_menuFrame += CreateInWorldText(EventPlayer(), "┘", <Vector>UpdateEveryFrame(EyePosition(EventPlayer()) + 100 * ((cm_buttons[EvaluateOnce(cm_i)].PosX + cm_buttons[EvaluateOnce(cm_i)].ClickWidth / 2) * CrossProduct(FacingDirectionOf(EventPlayer()), DirectionFromAngles(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())) - 90)) + (cm_buttons[EvaluateOnce(cm_i)].PosY - cm_buttons[EvaluateOnce(cm_i)].ClickHeight / 2 - 0.2) * DirectionFromAngles(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())) - 90) + 3 * FacingDirectionOf(EventPlayer()))), 2, Clipping.DoNotClip, InworldTextRev.VisibleToAndPosition, !cm_buttons[EvaluateOnce(cm_i)].Visible ? CustomColor(0, 0, 0, 0) : cm_buttons[EvaluateOnce(cm_i)].Interactable ? Color.Yellow : Color.White, Spectators.DefaultVisibility);
+	}
 }
 
 rule: "Open menu"
@@ -299,21 +299,21 @@ Event.OngoingPlayer
 if (!IsDummyBot(EventPlayer()))
 if (cm_isInMenu)
 {
-    SetAimSpeed(EventPlayer(), 15);
-    cm_menuOriginalFacing = FacingDirectionOf(EventPlayer());
-    SetPrimaryFireEnabled(EventPlayer(), false);
-    SetSecondaryFireEnabled(EventPlayer(), false);
-    if (cm_s_disableGameHud)
-    {
-        DisableHeroHud(EventPlayer());
-        DisableGameModeHud(EventPlayer());
-    }
-    createExitButton();
-    MinWait();
-    if (cm_s_debugMode)
-    {
-        createClickAreas();
-    }
+	SetAimSpeed(EventPlayer(), 15);
+	cm_menuOriginalFacing = FacingDirectionOf(EventPlayer());
+	SetPrimaryFireEnabled(EventPlayer(), false);
+	SetSecondaryFireEnabled(EventPlayer(), false);
+	if (cm_s_disableGameHud)
+	{
+		DisableHeroHud(EventPlayer());
+		DisableGameModeHud(EventPlayer());
+	}
+	createExitButton();
+	MinWait();
+	if (cm_s_debugMode)
+	{
+		createClickAreas();
+	}
 }
 
 rule: "Close menu"
@@ -321,10 +321,10 @@ Event.OngoingPlayer
 if (!IsDummyBot())
 if (!cm_isInMenu)
 {
-    SetAimSpeed(EventPlayer(), 100);
-    SetPrimaryFireEnabled(EventPlayer(), true);
-    SetSecondaryFireEnabled(EventPlayer(), true);
-    DestroyIcon(cm_exitIconEntity);
+	SetAimSpeed(EventPlayer(), 100);
+	SetPrimaryFireEnabled(EventPlayer(), true);
+	SetSecondaryFireEnabled(EventPlayer(), true);
+	DestroyIcon(cm_exitIconEntity);
 }
 
 rule: 'Game mode hud'
@@ -332,7 +332,7 @@ Event.OngoingPlayer
 if (!cm_isInMenu)
 if (!popupWindowVisible)
 {
-    EnableHeroHud();
+	EnableHeroHud();
 }
 
 rule: "Detect button press"
@@ -340,25 +340,25 @@ Event.OngoingPlayer
 if (cm_isInMenu)
 if (IsButtonHeld(EventPlayer(), Button.PrimaryFire) || IsButtonHeld(EventPlayer(), Button.SecondaryFire))
 {
-    define primary = IsButtonHeld(EventPlayer(), Button.PrimaryFire);
+	define primary = IsButtonHeld(EventPlayer(), Button.PrimaryFire);
 
-    if (AbsoluteValue(AngleDifference(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), HorizontalAngleFromDirection(cm_menuOriginalFacing)) - cm_exitButtonProperties[1]) <= cm_exitButtonProperties[3] / 2 && AbsoluteValue(AngleDifference(VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(cm_menuOriginalFacing)) - cm_exitButtonProperties[2]) <= cm_exitButtonProperties[3] / 2)
-        cm_currActionID = FirstOf(cm_exitButtonProperties);
+	if (AbsoluteValue(AngleDifference(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), HorizontalAngleFromDirection(cm_menuOriginalFacing)) - cm_exitButtonProperties[1]) <= cm_exitButtonProperties[3] / 2 && AbsoluteValue(AngleDifference(VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(cm_menuOriginalFacing)) - cm_exitButtonProperties[2]) <= cm_exitButtonProperties[3] / 2)
+		cm_currActionID = FirstOf(cm_exitButtonProperties);
 
-    for (define i = 0; cm_buttons.Length; 1)
-        if (cm_buttons[i].Interactable && AbsoluteValue(AngleDifference(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), HorizontalAngleFromDirection(cm_menuOriginalFacing)) - cm_buttons[i].PosX) <= cm_buttons[i].ClickWidth / 2 && AbsoluteValue(AngleDifference(VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(cm_menuOriginalFacing)) - cm_buttons[i].PosY) <= cm_buttons[i].ClickHeight / 2)
-            cm_currActionID = primary ? cm_buttons[i].PrimaryAction : cm_buttons[i].SecondaryAction;
+	for (define i = 0; cm_buttons.Length; 1)
+		if (cm_buttons[i].Interactable && AbsoluteValue(AngleDifference(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), HorizontalAngleFromDirection(cm_menuOriginalFacing)) - cm_buttons[i].PosX) <= cm_buttons[i].ClickWidth / 2 && AbsoluteValue(AngleDifference(VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(cm_menuOriginalFacing)) - cm_buttons[i].PosY) <= cm_buttons[i].ClickHeight / 2)
+			cm_currActionID = primary ? cm_buttons[i].PrimaryAction : cm_buttons[i].SecondaryAction;
 
-    if (cm_currActionID && cm_s_buttonClickSounds)
-    {
-        if (primary)
-            releasePrimary = true;
+	if (cm_currActionID && cm_s_buttonClickSounds)
+	{
+		if (primary)
+			releasePrimary = true;
 
-        PlayEffect(EventPlayer(), PlayEffect.ExplosionSound, Color.White, EventPlayer(), 30);
-    }
+		PlayEffect(EventPlayer(), PlayEffect.ExplosionSound, Color.White, EventPlayer(), 30);
+	}
 
-    MinWait();
-    cm_currActionID = null;
+	MinWait();
+	cm_currActionID = null;
 }
 
 rule: "Action ID: Exit menu"
@@ -366,7 +366,7 @@ Event.OngoingPlayer
 if (canModifyMap)
 if (cm_currActionID == "exit menu")
 {
-    cm_isInMenu = false;
+	cm_isInMenu = false;
 }
 
 rule: "Cursor bounds"
@@ -374,21 +374,21 @@ Event.OngoingPlayer
 if (cm_isInMenu)
 if ((AbsoluteValue(AngleDifference(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), HorizontalAngleFromDirection(cm_menuOriginalFacing))) > cm_s_menuWidth / 2 + 0.05 || AbsoluteValue(AngleDifference(VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(cm_menuOriginalFacing))) > cm_s_menuHeight / 2 + 0.05) == true)
 {
-    SetFacing(EventPlayer(), DirectionFromAngles(Min(Max(HorizontalAngleFromDirection(cm_menuOriginalFacing) - AngleDifference(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), HorizontalAngleFromDirection(cm_menuOriginalFacing)), HorizontalAngleFromDirection(cm_menuOriginalFacing) - cm_s_menuWidth / 2), HorizontalAngleFromDirection(cm_menuOriginalFacing) + cm_s_menuWidth / 2), Min(Max(VerticalAngleFromDirection(cm_menuOriginalFacing) - AngleDifference(VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(cm_menuOriginalFacing)), VerticalAngleFromDirection(cm_menuOriginalFacing) - cm_s_menuHeight / 2), VerticalAngleFromDirection(cm_menuOriginalFacing) + cm_s_menuHeight / 2)), Relative.ToWorld);
-    MinWait();
-    LoopIfConditionIsTrue();
+	SetFacing(EventPlayer(), DirectionFromAngles(Min(Max(HorizontalAngleFromDirection(cm_menuOriginalFacing) - AngleDifference(HorizontalAngleFromDirection(FacingDirectionOf(EventPlayer())), HorizontalAngleFromDirection(cm_menuOriginalFacing)), HorizontalAngleFromDirection(cm_menuOriginalFacing) - cm_s_menuWidth / 2), HorizontalAngleFromDirection(cm_menuOriginalFacing) + cm_s_menuWidth / 2), Min(Max(VerticalAngleFromDirection(cm_menuOriginalFacing) - AngleDifference(VerticalAngleFromDirection(FacingDirectionOf(EventPlayer())), VerticalAngleFromDirection(cm_menuOriginalFacing)), VerticalAngleFromDirection(cm_menuOriginalFacing) - cm_s_menuHeight / 2), VerticalAngleFromDirection(cm_menuOriginalFacing) + cm_s_menuHeight / 2)), Relative.ToWorld);
+	MinWait();
+	LoopIfConditionIsTrue();
 }
 
 rule: 'CM: Func Primary'
 Event.OngoingPlayer
 if (cm_currActionID[0] == MenuAction.FuncPrimary)
 {
-    (<Boolean => void>cm_currActionID[1]).Invoke(true);
+	(<Boolean => void>cm_currActionID[1]).Invoke(true);
 }
 
 rule: 'CM: Func Secondary'
 Event.OngoingPlayer
 if (cm_currActionID[0] == MenuAction.FuncSecondary)
 {
-    (<Boolean => void>cm_currActionID[1]).Invoke(false);
+	(<Boolean => void>cm_currActionID[1]).Invoke(false);
 }

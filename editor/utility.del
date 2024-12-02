@@ -13,7 +13,7 @@ Vector watchPoint: RayCastHitPosition(eye, eye + facing * 100, null, null, false
 
 T[] insert<T>(in T[] array, in Number index, in T value)
 {
-    return array.Slice(0, index).Append([value]).Append(array.Slice(index, 999));
+	return array.Slice(0, index).Append([value]).Append(array.Slice(index, 999));
 }
 
 globalvar Number waitlessI;

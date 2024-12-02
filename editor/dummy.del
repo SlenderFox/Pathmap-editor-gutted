@@ -20,38 +20,38 @@ rule: 'Dummy: new state'
 Event.OngoingPlayer
 if (dummyOutlineState != dummySavedOutlineState)
 {
-    dummySavedOutlineState = dummyOutlineState;
+	dummySavedOutlineState = dummyOutlineState;
 
-    if (dummySavedOutlineState == 0)
-        StopForcingPlayerOutlines(eventPlayer, host);
-    else if (dummySavedOutlineState == 1)
-        StartForcingPlayerOutlines(eventPlayer, host, true, Color.SkyBlue, OutlineType.Always);
-    else if (dummySavedOutlineState == 2)
-        StartForcingPlayerOutlines(eventPlayer, host, true, Color.Green, OutlineType.Always);
-    else if (dummySavedOutlineState == 3)
-        StartForcingPlayerOutlines(eventPlayer, host, true, Color.Turquoise, OutlineType.Always);
+	if (dummySavedOutlineState == 0)
+		StopForcingPlayerOutlines(eventPlayer, host);
+	else if (dummySavedOutlineState == 1)
+		StartForcingPlayerOutlines(eventPlayer, host, true, Color.SkyBlue, OutlineType.Always);
+	else if (dummySavedOutlineState == 2)
+		StartForcingPlayerOutlines(eventPlayer, host, true, Color.Green, OutlineType.Always);
+	else if (dummySavedOutlineState == 3)
+		StartForcingPlayerOutlines(eventPlayer, host, true, Color.Turquoise, OutlineType.Always);
 }
 
 rule: 'Dummy: destroy'
 if (button(Button.Ultimate))
 if (SelectedNodeID == -1)
 {
-    define destroy = selectedDummies;
-    for (waitlessI = 0; destroy.Length; 1)
-        DestroyDummyBot(destroy[waitlessI]);
+	define destroy = selectedDummies;
+	for (waitlessI = 0; destroy.Length; 1)
+		DestroyDummyBot(destroy[waitlessI]);
 }
 
 rule: 'Dummy: select/deselect all'
 if (button(Button.Ability1))
 {
-    Boolean flip! = !selectedDummies.Length;
-    AllPlayers().FilteredArray(p => p.IsDummy()).dummySelected = flip;
+	Boolean flip! = !selectedDummies.Length;
+	AllPlayers().FilteredArray(p => p.IsDummy()).dummySelected = flip;
 }
 
 rule: 'Dummy: teleport to cursor'
 if (button(Button.Melee))
 {
-    Teleport(selectedDummies, watchPoint);
+	Teleport(selectedDummies, watchPoint);
 }
 
 rule: 'Pathfind: Pathfind selected dummies'
@@ -63,31 +63,31 @@ if (selectedDummies.Length)
 if (!pathfinderActive)
 if (!host.releaseReload)
 {
-    host.releaseReload = true;
-    Vector destination = watchPoint;
-    Player[] players = selectedDummies;
-    Number[] targetNodes = [];
-    Number source = closestNodeToPosition(destination);
+	host.releaseReload = true;
+	Vector destination = watchPoint;
+	Player[] players = selectedDummies;
+	Number[] targetNodes = [];
+	Number source = closestNodeToPosition(destination);
 
-    PlayEffect(AllPlayers(), PlayEffect.RingExplosion, Color.Orange, destination, 2);
+	PlayEffect(AllPlayers(), PlayEffect.RingExplosion, Color.Orange, destination, 2);
 
-    for (waitlessI = 0; players.Length; 1)
-        targetNodes[waitlessI] = closestNodeToPosition(players[waitlessI].Position());
+	for (waitlessI = 0; players.Length; 1)
+		targetNodes[waitlessI] = closestNodeToPosition(players[waitlessI].Position());
 
-    DijkstraResult dijkstra = Dijkstra(source, targetNodes, pathfinderAttributes);
-    players.travelPath = dijkstra.Parents;
-    players.isPathfinding = true;
-    players.pathfindDestination = destination;
+	DijkstraResult dijkstra = Dijkstra(source, targetNodes, pathfinderAttributes);
+	players.travelPath = dijkstra.Parents;
+	players.isPathfinding = true;
+	players.pathfindDestination = destination;
 
-    for (waitlessI = 0; players.Length; 1)
-        players[waitlessI].currentPathNode = targetNodes[waitlessI];
+	for (waitlessI = 0; players.Length; 1)
+		players[waitlessI].currentPathNode = targetNodes[waitlessI];
 }
 
 rule: 'Pathfind: Begin'
 Event.OngoingPlayer
 if (isPathfinding)
 {
-    WalkToDestination();
+	WalkToDestination();
 }
 
 rule: 'Pathfind: Next node'
@@ -95,39 +95,39 @@ Event.OngoingPlayer
 if (isPathfinding)
 if (PositionOf().DistanceTo(currentPathfindingNodePosition) < 0.4)
 {
-    Number previous! = currentPathNode;
-    currentPathNode = travelPath[currentPathNode];
+	Number previous! = currentPathNode;
+	currentPathNode = travelPath[currentPathNode];
 
-    // Reset states of last node actions.
-    if (pfstateIsStopped)
-    {
-        pfstateIsStopped = false;
-        WalkToDestination();
-    }
-    if (pfstateIsJumping)
-    {
-        pfstateIsJumping = false;
-        StopHoldingButton(eventPlayer, Button.Jump);
-    }
+	// Reset states of last node actions.
+	if (pfstateIsStopped)
+	{
+		pfstateIsStopped = false;
+		WalkToDestination();
+	}
+	if (pfstateIsJumping)
+	{
+		pfstateIsJumping = false;
+		StopHoldingButton(eventPlayer, Button.Jump);
+	}
 
-    // Get attributes of current node
-    Number[] attributes = Attributes.FilteredArray(a =>
-        a.Node1 == Nodes[previous].Node.UniqueID &&
-        a.Node2 == Nodes[currentPathNode].Node.UniqueID)
-        .Map(a => a.Value);
-        
-    // Execute the rules that contain the attributes.
-    Number[] executeRules = Rules
-        .Map((r, i) => i)
-        .FilteredArray(i =>
-            Rules[i].IsHeroEnabled(HeroOf()) &&
-            attributes.Contains(Rules[i].ExecutesOnAttribute));
+	// Get attributes of current node
+	Number[] attributes = Attributes.FilteredArray(a =>
+		a.Node1 == Nodes[previous].Node.UniqueID &&
+		a.Node2 == Nodes[currentPathNode].Node.UniqueID)
+		.Map(a => a.Value);
 
-    if (executeRules.Length)
-    {
-        for (define a = 0; Rules[executeRules.First].Actions.Length; 1)
-            ExecuteAction(Rules[executeRules.First].Actions[a]);
-    }
+	// Execute the rules that contain the attributes.
+	Number[] executeRules = Rules
+		.Map((r, i) => i)
+		.FilteredArray(i =>
+			Rules[i].IsHeroEnabled(HeroOf()) &&
+			attributes.Contains(Rules[i].ExecutesOnAttribute));
+
+	if (executeRules.Length)
+	{
+		for (define a = 0; Rules[executeRules.First].Actions.Length; 1)
+			ExecuteAction(Rules[executeRules.First].Actions[a]);
+	}
 }
 
 rule: 'Pathfind: Destination reached'
@@ -135,18 +135,18 @@ Event.OngoingPlayer
 if (isPathfinding)
 if (PositionOf().DistanceTo(pathfindDestination) < 0.4)
 {
-    isPathfinding = false;
-    StopThrottleInDirection(eventPlayer);
+	isPathfinding = false;
+	StopThrottleInDirection(eventPlayer);
 }
 
 void WalkToDestination()
 {
-    StartThrottleInDirection(
-        eventPlayer,
-        PositionOf().DirectionTowards(walkingTo),
-        1,
-        Relative.ToWorld,
-        ThrottleBehavior.ReplaceExistingThrottle,
-        ThrottleRev.DirectionAndMagnitude
-    );
+	StartThrottleInDirection(
+		eventPlayer,
+		PositionOf().DirectionTowards(walkingTo),
+		1,
+		Relative.ToWorld,
+		ThrottleBehavior.ReplaceExistingThrottle,
+		ThrottleRev.DirectionAndMagnitude
+	);
 }

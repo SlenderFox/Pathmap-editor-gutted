@@ -17,279 +17,279 @@ playervar Number[] buttonCollectionMain = [];
 
 enum MenuAction
 {
-    Back = 1,
-    FreecamIncrement = 2,
-    FreecamDecrement = 3,
-    Undo = 4,
-    Redo = 5,
-    LinkMode = 6,
-    AttributeIncrement = 7,
-    AttributeIncrementBig = 8,
-    AttributeDecrement = 9,
-    AttributeDecrementBig = 10,
-    AddDummy = 11,
-    ChooseHero = 12,
-    RuleMenu = 13,
-    RuleNext = 14,
-    RulePrevious = 15,
-    CreateRule = 16,
-    AddAction = 17,
-    ScrollbarUp = 18,
-    ScrollbarDown = 19,
-    ScrollbarItem = 20,
-    WaitTimeUp = 21,
-    WaitTimeDown = 22,
-    WaitTimeUpBig = 23,
-    WaitTimeDownBig = 24,
-    WaitConfirm = 25,
-    DeleteAction = 26,
-    PathfinderSettings = 27,
-    AddOrRemovePathfindingAttribute = 28,
-    ToggleAll = 29,
-    Guide = 30,
-    Export = 31,
-    ExportWorkshop = 32,
-    ExportOstw = 33,
-    ExportOverpy = 34,
-    FuncPrimary = 35,
-    FuncSecondary = 36
+	Back = 1,
+	FreecamIncrement = 2,
+	FreecamDecrement = 3,
+	Undo = 4,
+	Redo = 5,
+	LinkMode = 6,
+	AttributeIncrement = 7,
+	AttributeIncrementBig = 8,
+	AttributeDecrement = 9,
+	AttributeDecrementBig = 10,
+	AddDummy = 11,
+	ChooseHero = 12,
+	RuleMenu = 13,
+	RuleNext = 14,
+	RulePrevious = 15,
+	CreateRule = 16,
+	AddAction = 17,
+	ScrollbarUp = 18,
+	ScrollbarDown = 19,
+	ScrollbarItem = 20,
+	WaitTimeUp = 21,
+	WaitTimeDown = 22,
+	WaitTimeUpBig = 23,
+	WaitTimeDownBig = 24,
+	WaitConfirm = 25,
+	DeleteAction = 26,
+	PathfinderSettings = 27,
+	AddOrRemovePathfindingAttribute = 28,
+	ToggleAll = 29,
+	Guide = 30,
+	Export = 31,
+	ExportWorkshop = 32,
+	ExportOstw = 33,
+	ExportOverpy = 34,
+	FuncPrimary = 35,
+	FuncSecondary = 36
 }
 
 enum MenuState
 {
-    None,
-    Main,
-    ChooseHero,
-    Rules,
-    AddAction,
-    ChooseWaitLength,
-    PathfinderSettings,
-    Guide,
-    Export,
-    ConfirmMirror,
-    LongRunningTask
+	None,
+	Main,
+	ChooseHero,
+	Rules,
+	AddAction,
+	ChooseWaitLength,
+	PathfinderSettings,
+	Guide,
+	Export,
+	ConfirmMirror,
+	LongRunningTask
 }
 
 rule: 'CM: Make buttons: Main'
 Event.OngoingPlayer
 if (isHost)
 {
-    for (define b = 0; 2; 1)
-    {
-        String s! = '';
-        for (define c = 0; 13; 1)
-        {
-            s = <'<0><1>', s, '▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒\n'>;
-            MinWait();
-        }
-        createButton(s, defaultColor: Color.Black, posX: 0, posY: -.9-b*.1, interactable: false);
-    }
+	for (define b = 0; 2; 1)
+	{
+		String s! = '';
+		for (define c = 0; 13; 1)
+		{
+			s = <'<0><1>', s, '▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒\n'>;
+			MinWait();
+		}
+		createButton(s, defaultColor: Color.Black, posX: 0, posY: -.9-b*.1, interactable: false);
+	}
 
-    SetMenuState(MenuState.Main);
+	SetMenuState(MenuState.Main);
 
-    mainText = createButton(
-        'main',
-        scale: 2,
-        posX: 0,
-        posY: 1.15,
-        defaultColor: Color.Gray,
-        interactable: false);
-    createButton(
-        'back',
-        primaryAction: MenuAction.Back,
-        scale: 2,
-        posX: -2,
-        posY: 1,
-        clickWidth: 0.4,
-        defaultColor: Color.Red);
-    createButton('▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒', defaultColor: Color.Black, posX: 0, posY: 1.375, interactable: false);
-    createButton('♡              ♡', defaultColor: Color.Red, posX: 0, posY: 1.375, interactable: false);
-    createButton('ｈ  ｐ  ／  ｏ  ｉ  ｏ   ｄ  ｔ\n               ', posX: .15, posY: 1.375 - .17, interactable: false);
-    createButton('ｔ  ｓ  ／  －   ．  ｍ  ｅ  ｉ\n               ', posX: .23, posY: 1.375 - .17, interactable: false);
-    createButton('ｔ  ：  ｋ  ｆ ｃ    ／  ｌ  ｎ\n               ', posX: .31, posY: 1.375 - .17, interactable: false);
-    // createButton('ｈｔ ｓ／ｋ  - ｉ  ｏ ／ｅｔｎ\n               ', posX: .15, posY: 1.375 - .17, interactable: false);
-    // createButton('ｔｐ ：／ｏ ｆ.ｃ ｍｄｌｉ\n               ', posX: .23, posY: 1.375 - .17, interactable: false);
+	mainText = createButton(
+		'main',
+		scale: 2,
+		posX: 0,
+		posY: 1.15,
+		defaultColor: Color.Gray,
+		interactable: false);
+	createButton(
+		'back',
+		primaryAction: MenuAction.Back,
+		scale: 2,
+		posX: -2,
+		posY: 1,
+		clickWidth: 0.4,
+		defaultColor: Color.Red);
+	createButton('▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒', defaultColor: Color.Black, posX: 0, posY: 1.375, interactable: false);
+	createButton('♡              ♡', defaultColor: Color.Red, posX: 0, posY: 1.375, interactable: false);
+	createButton('ｈ  ｐ  ／  ｏ  ｉ  ｏ   ｄ  ｔ\n               ', posX: .15, posY: 1.375 - .17, interactable: false);
+	createButton('ｔ  ｓ  ／  －   ．  ｍ  ｅ  ｉ\n               ', posX: .23, posY: 1.375 - .17, interactable: false);
+	createButton('ｔ  ：  ｋ  ｆ ｃ    ／  ｌ  ｎ\n               ', posX: .31, posY: 1.375 - .17, interactable: false);
+	// createButton('ｈｔ ｓ／ｋ  - ｉ  ｏ ／ｅｔｎ\n               ', posX: .15, posY: 1.375 - .17, interactable: false);
+	// createButton('ｔｐ ：／ｏ ｆ.ｃ ｍｄｌｉ\n               ', posX: .23, posY: 1.375 - .17, interactable: false);
 }
 
 void SetMenuState(MenuState newState) '(Subroutine) CM: Update menu'
 {
-    if (newState == menuState) return;
+	if (newState == menuState) return;
 
-    // Cleanup
-    if (attributeSelector)
-    {
-        attributeSelector.Dispose();
-        attributeSelector = null;
-    }
+	// Cleanup
+	if (attributeSelector)
+	{
+		attributeSelector.Dispose();
+		attributeSelector = null;
+	}
 
-    destroyButtonCollection(buttonCollectionMain);
+	destroyButtonCollection(buttonCollectionMain);
 
-    if (menuState == MenuState.Rules)
-        DestroyPager();
-        
-    menuState = newState;
+	if (menuState == MenuState.Rules)
+		DestroyPager();
 
-    // Undo/redo
-    if (newState == MenuState.Main || newState == MenuState.Rules)
-    {
-        if (undoText == -1)
-        {
-            undoText = createButton(
-                '← undo',
-                primaryAction: MenuAction.Undo,
-                scale: 2,
-                posX: -2.1,
-                posY: -1,
-                clickWidth: 0.4,
-                clickHeight: 0.3,
-                defaultColor: Color.Yellow);
-            redoText = createButton(
-                'redo →',
-                primaryAction: MenuAction.Redo,
-                scale: 2,
-                posX: -1.5,
-                posY: -1,
-                clickWidth: 0.4,
-                clickHeight: 0.3,
-                defaultColor: Color.Aqua);
-            UpdateUndoInteractability();
-        }
-    }
-    else if (undoText != -1)
-    {
-        DestroyButton(undoText);
-        DestroyButton(redoText);
-        undoText = -1;
-        redoText = -1;
-    }
-    
-    // Setup
-    if (newState == MenuState.Main)
-    {
-        createHelpButton(1.85, 1, null, [
-            MessageLine.Separator(<'<0> Rule Editor <0>', AbilityIconString(Hero.Torbjorn, Button.Ability2)>, Color.Rose),
-            MessageLine.Text('Create workshop rules that will execute upon reaching a path tagged with an attribute.'),
-            MessageLine.Separator(<'<0> Export <0>', AbilityIconString(Hero.Bastion, Button.Ability1)>, Color.LimeGreen),
-            MessageLine.Text('Generates the pathfinding code that you can add to your workshop gamemode.'),
-            MessageLine.Separator(<'<0> Add Dummy Bot <0>', AbilityIconString(Hero.Echo, Button.Ultimate)>, Color.Violet),
-            MessageLine.Text('Spawn dummy bots that you can use to test your map.'),
-            MessageLine.Separator(<'<0> Pathfinder Settings <0>', AbilityIconString(Hero.Kiriko, Button.Ability1)>, Color.Yellow),
-            MessageLine.Text('Set which attributes the dummy bots will use when testing your map.')
-        ]);
+	menuState = newState;
 
-        buttonCollectionMain += createButton(
-            <'            add dummy bot <0>', AbilityIconString(Hero.Echo, Button.Ultimate)>,
-            primaryAction: MenuAction.AddDummy,
-            scale: 2.5,
-            posX: 1.5,
-            posY: .4,
-            clickWidth: 1.7,
-            defaultColor: Color.White);
-        
-        buttonCollectionMain += createButton(
-            'Version history',
-            onClick: l => {
-                showMessage(null, [
-                    MessageLine.Header("Import code: hp2dg", Color.Orange),
-                    MessageLine.Separator("v1.0.4", Color.SkyBlue),
-                    MessageLine.Text("Initial Release")
-                ]);
-            },
-            posX: 1.6,
-            posY: -.8,
-            clickWidth: 1.5,
-            defaultColor: Color.White);
+	// Undo/redo
+	if (newState == MenuState.Main || newState == MenuState.Rules)
+	{
+		if (undoText == -1)
+		{
+			undoText = createButton(
+				'← undo',
+				primaryAction: MenuAction.Undo,
+				scale: 2,
+				posX: -2.1,
+				posY: -1,
+				clickWidth: 0.4,
+				clickHeight: 0.3,
+				defaultColor: Color.Yellow);
+			redoText = createButton(
+				'redo →',
+				primaryAction: MenuAction.Redo,
+				scale: 2,
+				posX: -1.5,
+				posY: -1,
+				clickWidth: 0.4,
+				clickHeight: 0.3,
+				defaultColor: Color.Aqua);
+			UpdateUndoInteractability();
+		}
+	}
+	else if (undoText != -1)
+	{
+		DestroyButton(undoText);
+		DestroyButton(redoText);
+		undoText = -1;
+		redoText = -1;
+	}
 
-        buttonCollectionMain += createButton(
-            'credits',
-            onClick: l => {
-                showMessage(null, [
-                    MessageLine.Separator('Pathmap Editor v1.0.4', Color.LimeGreen),
-                    MessageLine.Text('https://github.com/ItsDeltin/Pathmap-editor\n', Color.Blue),
-                    MessageLine.Header('  ☆ Credits ☆  ', Color.Rose),
-                    MessageLine.Separator('Created by Deltin', Color.SkyBlue),
-                    MessageLine.Text('with Overwatch Script To Workshop'),
-                    MessageLine.Text('https://github.com/ItsDeltin/Overwatch-Script-To-Workshop\n', Color.Blue),
-                    MessageLine.Separator('Josbird', Color.Orange),
-                    MessageLine.Text('- Cursor menu library\n- Noclip\n'),
-                    MessageLine.Separator('Zezombye', Color.Yellow),
-                    MessageLine.Text('- Map symmetry data\n- overpy')
-                ]);
-            },
-            posX: 1.6,
-            posY: -1,
-            clickWidth: 1.5,
-            defaultColor: Color.White);
-        
-        buttonCollectionMain += createButton(
-            <'                      Rule editor <0>', AbilityIconString(Hero.Torbjorn, Button.Ability2)>,
-            primaryAction: MenuAction.RuleMenu,
-            scale: 2.5,
-            posX: 1.5,
-            posY: 0.8,
-            clickWidth: 1.7,
-            defaultColor: Color.White);
-        
-        buttonCollectionMain += createButton(
-            <'pathfinder settings <0>', AbilityIconString(Hero.Kiriko, Button.Ability1)>,
-            primaryAction: MenuAction.PathfinderSettings,
-            scale: 2.5,
-            posX: 1.5,
-            posY: 0.2,
-            clickWidth: 1.7,
-            defaultColor: Color.White);
+	// Setup
+	if (newState == MenuState.Main)
+	{
+		createHelpButton(1.85, 1, null, [
+			MessageLine.Separator(<'<0> Rule Editor <0>', AbilityIconString(Hero.Torbjorn, Button.Ability2)>, Color.Rose),
+			MessageLine.Text('Create workshop rules that will execute upon reaching a path tagged with an attribute.'),
+			MessageLine.Separator(<'<0> Export <0>', AbilityIconString(Hero.Bastion, Button.Ability1)>, Color.LimeGreen),
+			MessageLine.Text('Generates the pathfinding code that you can add to your workshop gamemode.'),
+			MessageLine.Separator(<'<0> Add Dummy Bot <0>', AbilityIconString(Hero.Echo, Button.Ultimate)>, Color.Violet),
+			MessageLine.Text('Spawn dummy bots that you can use to test your map.'),
+			MessageLine.Separator(<'<0> Pathfinder Settings <0>', AbilityIconString(Hero.Kiriko, Button.Ability1)>, Color.Yellow),
+			MessageLine.Text('Set which attributes the dummy bots will use when testing your map.')
+		]);
 
-        buttonCollectionMain += createButton(
-            'Guide',
-            onClick: l => {
-                showPagedMessage([
-                    () => [
-                        MessageLine.Separator('Getting started\n'),
-                        MessageLine.Text('The pathmap editor creates nav meshes, which are used to pathfind dummy bots.\n'),
-                        MessageLine.Text('The editor generates workshop code into the log which can be copied into your gamemode, you do\n' +
-                            'not need the overhead of the entire editor in order to pathfind your bots.\n'),
-                        MessageLine.Text('Make sure the "Enable Workshop Inspector" & "Enable Workshop Inspector Log File"\n'
-                        + 'settings are enabled in Options > Gameplay > General. This will allow you to save and export your map.\n\n', Color.Yellow),
-                        MessageLine.Text('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'),
-                        MessageLine.Text('These workshop codes contain the editor loaded with a completed waypoint graph.\n' +
-                            'You can use these to see how your map should look.\n'),
-                        MessageLine.Text('Esperança     Hanamura', Color.SkyBlue),
-                        MessageLine.Text('GZWF9              FQY78', Color.Green)
-                    ],
-                    () => [
-                        MessageLine.Text('Pathfinding is made up of 3 components: Nodes, paths, and attributes.'),
-                        MessageLine.Separator(<'<0> Nodes', AbilityIconString(Hero.Sombra, Button.SecondaryFire)>, Color.Turquoise),
-                        MessageLine.Text('When pathfinding, bots will walk between the nodes placed in the world.\n'),
-                        MessageLine.Separator(<'<0> Paths', AbilityIconString(Hero.Pharah, Button.Ability2)>, Color.Orange),
-                        MessageLine.Text('Paths determine which nodes are connected.' +
-                                    '\nWhen the connect mode is "Connect: Paths", Select two nodes in the world to create a path between them.\n',),
-                        MessageLine.Separator(<'<0> Attributes', AbilityIconString(Hero.Genji, Button.Jump)>, Color.Yellow),
-                        MessageLine.Text('Paths can be tagged with values in order to create gates and paths that require hero abilities to cross.' +
-                                    '\nWhen the connect mode is "Connect: Attributes", Select two nodes to tag the path between them.')
-                    ],
-                    () => [
-                        MessageLine.Text('Note that there is a difference between "saving" and "exporting". Saving will allow you to edit the pathmap\n'
-                            + 'again in the editor. Exporting is generating the actual code that is copied into your gamemode.\n', Color.Yellow),
-                        MessageLine.Separator('How To Save', Color.SkyBlue),
-                        MessageLine.Text('1. Press Escape.\n2. Click "Open Workshop Inspector".\n'
-                            + '3. Click the (X) button below the timeline.\n'
-                            + '4. Save the copied contents into a text file.'),
-                        MessageLine.Separator('How to load', Color.Yellow),
-                        MessageLine.Text('1. Import the pathmap editor workshop code "GZWF9"\n2. Open the workshop editor.\n'
-                            + '3. scroll to the top of the page to the rule that says:'),
-                        MessageLine.Header('【◈ Paste the actions to load a previous save here!! ◈】', CustomColor(179, 179, 179, 255)),
-                        MessageLine.Text('4. Paste the saved text into the rule.\n'),
-                        MessageLine.Text('Always remember that the workshop won\'t auto-save your map.', Color.Rose),
-                        MessageLine.Text('If the game restarts or is closed you will lose your progress.')
-                    ],
-                    () => [
-                        MessageLine.Separator('How to load old maps', Color.SkyBlue),
-                        MessageLine.Text('When loading your save from old editor versions, there is a chance you will get an error such as ' +
-                                    '\n"Expected variable after \'Global\'". You can fix this by editing your save so that the workshop accepts it.\n'),
-                        MessageLine.Text('Step #1: Open your save in a text editor and delete the "variables" section.\n', Color.LimeGreen),
-                        MessageLine.Text('Step #2: delete the unnecessary variable assignment actions. The variables below\n' +
-                            'are part of the save, remove anything else.\n', Color.LimeGreen),
-                        MessageLine.Text(
+		buttonCollectionMain += createButton(
+			<'            add dummy bot <0>', AbilityIconString(Hero.Echo, Button.Ultimate)>,
+			primaryAction: MenuAction.AddDummy,
+			scale: 2.5,
+			posX: 1.5,
+			posY: .4,
+			clickWidth: 1.7,
+			defaultColor: Color.White);
+
+		buttonCollectionMain += createButton(
+			'Version history',
+			onClick: l => {
+				showMessage(null, [
+					MessageLine.Header("Import code: hp2dg", Color.Orange),
+					MessageLine.Separator("v1.0.4", Color.SkyBlue),
+					MessageLine.Text("Initial Release")
+				]);
+			},
+			posX: 1.6,
+			posY: -.8,
+			clickWidth: 1.5,
+			defaultColor: Color.White);
+
+		buttonCollectionMain += createButton(
+			'credits',
+			onClick: l => {
+				showMessage(null, [
+					MessageLine.Separator('Pathmap Editor v1.0.4', Color.LimeGreen),
+					MessageLine.Text('https://github.com/ItsDeltin/Pathmap-editor\n', Color.Blue),
+					MessageLine.Header('  ☆ Credits ☆  ', Color.Rose),
+					MessageLine.Separator('Created by Deltin', Color.SkyBlue),
+					MessageLine.Text('with Overwatch Script To Workshop'),
+					MessageLine.Text('https://github.com/ItsDeltin/Overwatch-Script-To-Workshop\n', Color.Blue),
+					MessageLine.Separator('Josbird', Color.Orange),
+					MessageLine.Text('- Cursor menu library\n- Noclip\n'),
+					MessageLine.Separator('Zezombye', Color.Yellow),
+					MessageLine.Text('- Map symmetry data\n- overpy')
+				]);
+			},
+			posX: 1.6,
+			posY: -1,
+			clickWidth: 1.5,
+			defaultColor: Color.White);
+
+		buttonCollectionMain += createButton(
+			<'                      Rule editor <0>', AbilityIconString(Hero.Torbjorn, Button.Ability2)>,
+			primaryAction: MenuAction.RuleMenu,
+			scale: 2.5,
+			posX: 1.5,
+			posY: 0.8,
+			clickWidth: 1.7,
+			defaultColor: Color.White);
+
+		buttonCollectionMain += createButton(
+			<'pathfinder settings <0>', AbilityIconString(Hero.Kiriko, Button.Ability1)>,
+			primaryAction: MenuAction.PathfinderSettings,
+			scale: 2.5,
+			posX: 1.5,
+			posY: 0.2,
+			clickWidth: 1.7,
+			defaultColor: Color.White);
+
+		buttonCollectionMain += createButton(
+			'Guide',
+			onClick: l => {
+				showPagedMessage([
+					() => [
+						MessageLine.Separator('Getting started\n'),
+						MessageLine.Text('The pathmap editor creates nav meshes, which are used to pathfind dummy bots.\n'),
+						MessageLine.Text('The editor generates workshop code into the log which can be copied into your gamemode, you do\n' +
+							'not need the overhead of the entire editor in order to pathfind your bots.\n'),
+						MessageLine.Text('Make sure the "Enable Workshop Inspector" & "Enable Workshop Inspector Log File"\n'
+						+ 'settings are enabled in Options > Gameplay > General. This will allow you to save and export your map.\n\n', Color.Yellow),
+						MessageLine.Text('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'),
+						MessageLine.Text('These workshop codes contain the editor loaded with a completed waypoint graph.\n' +
+							'You can use these to see how your map should look.\n'),
+						MessageLine.Text('Esperança     Hanamura', Color.SkyBlue),
+						MessageLine.Text('GZWF9              FQY78', Color.Green)
+					],
+					() => [
+						MessageLine.Text('Pathfinding is made up of 3 components: Nodes, paths, and attributes.'),
+						MessageLine.Separator(<'<0> Nodes', AbilityIconString(Hero.Sombra, Button.SecondaryFire)>, Color.Turquoise),
+						MessageLine.Text('When pathfinding, bots will walk between the nodes placed in the world.\n'),
+						MessageLine.Separator(<'<0> Paths', AbilityIconString(Hero.Pharah, Button.Ability2)>, Color.Orange),
+						MessageLine.Text('Paths determine which nodes are connected.' +
+									'\nWhen the connect mode is "Connect: Paths", Select two nodes in the world to create a path between them.\n',),
+						MessageLine.Separator(<'<0> Attributes', AbilityIconString(Hero.Genji, Button.Jump)>, Color.Yellow),
+						MessageLine.Text('Paths can be tagged with values in order to create gates and paths that require hero abilities to cross.' +
+									'\nWhen the connect mode is "Connect: Attributes", Select two nodes to tag the path between them.')
+					],
+					() => [
+						MessageLine.Text('Note that there is a difference between "saving" and "exporting". Saving will allow you to edit the pathmap\n'
+							+ 'again in the editor. Exporting is generating the actual code that is copied into your gamemode.\n', Color.Yellow),
+						MessageLine.Separator('How To Save', Color.SkyBlue),
+						MessageLine.Text('1. Press Escape.\n2. Click "Open Workshop Inspector".\n'
+							+ '3. Click the (X) button below the timeline.\n'
+							+ '4. Save the copied contents into a text file.'),
+						MessageLine.Separator('How to load', Color.Yellow),
+						MessageLine.Text('1. Import the pathmap editor workshop code "GZWF9"\n2. Open the workshop editor.\n'
+							+ '3. scroll to the top of the page to the rule that says:'),
+						MessageLine.Header('【◈ Paste the actions to load a previous save here!! ◈】', CustomColor(179, 179, 179, 255)),
+						MessageLine.Text('4. Paste the saved text into the rule.\n'),
+						MessageLine.Text('Always remember that the workshop won\'t auto-save your map.', Color.Rose),
+						MessageLine.Text('If the game restarts or is closed you will lose your progress.')
+					],
+					() => [
+						MessageLine.Separator('How to load old maps', Color.SkyBlue),
+						MessageLine.Text('When loading your save from old editor versions, there is a chance you will get an error such as ' +
+									'\n"Expected variable after \'Global\'". You can fix this by editing your save so that the workshop accepts it.\n'),
+						MessageLine.Text('Step #1: Open your save in a text editor and delete the "variables" section.\n', Color.LimeGreen),
+						MessageLine.Text('Step #2: delete the unnecessary variable assignment actions. The variables below\n' +
+							'are part of the save, remove anything else.\n', Color.LimeGreen),
+						MessageLine.Text(
 '- VERSION                  ' + '                    - ATTRIBUTES_VALUE
 - MAP                       ' + '                        - ATTRIBUTES_ID
 - UNIQUENODEID              ' + '           - ATTRIBUTES_NODE1
@@ -301,98 +301,98 @@ void SetMenuState(MenuState newState) '(Subroutine) CM: Update menu'
 - SEGMENTS_NODE1            ' + '      - Rules_ExecutesOnAttribute
 - SEGMENTS_NODE2            ' + '      - Rules_EnabledHeroes
 - __LOADPERSIST')
-                    ],
-                    () => [
-                        MessageLine.Separator('How to use exported code\n'),
-                        MessageLine.Text('Make sure to generate your Workshop, ostw, or overpy code in the export menu and add it to your game.\n' +
-                            'Afterwards, you can pathfind bots by setting their "pfDestination" player variable to the target destination.\n'),
-                        MessageLine.Text(<'Set Player Variable(pfDestination, Objective Position(0));\n<0>', '                               '>, subheader: 'Workshop code', subheaderColor: Color.Green),
-                        MessageLine.Text(<'pfDestination = ObjectivePosition(0);\n<0>', '                               '>, subheader: 'ostw code', subheaderColor: Color.SkyBlue),
-                        MessageLine.Text(<'eventPlayer.pfDestination = getObjectivePosition(0)\n<0>\n', '                               '>, subheader: 'overpy code', subheaderColor: Color.Yellow),
-                        MessageLine.Text('You can chase the pfDestination variable to another player\'s position to make the bot follow them.')
-                    ]
-                ]);
-            },
-            clickWidth: 1.5,
-            posX: 1.6,
-            posY: -.6,
-            defaultColor: Color.White);
+					],
+					() => [
+						MessageLine.Separator('How to use exported code\n'),
+						MessageLine.Text('Make sure to generate your Workshop, ostw, or overpy code in the export menu and add it to your game.\n' +
+							'Afterwards, you can pathfind bots by setting their "pfDestination" player variable to the target destination.\n'),
+						MessageLine.Text(<'Set Player Variable(pfDestination, Objective Position(0));\n<0>', '                               '>, subheader: 'Workshop code', subheaderColor: Color.Green),
+						MessageLine.Text(<'pfDestination = ObjectivePosition(0);\n<0>', '                               '>, subheader: 'ostw code', subheaderColor: Color.SkyBlue),
+						MessageLine.Text(<'eventPlayer.pfDestination = getObjectivePosition(0)\n<0>\n', '                               '>, subheader: 'overpy code', subheaderColor: Color.Yellow),
+						MessageLine.Text('You can chase the pfDestination variable to another player\'s position to make the bot follow them.')
+					]
+				]);
+			},
+			clickWidth: 1.5,
+			posX: 1.6,
+			posY: -.6,
+			defaultColor: Color.White);
 
-        buttonCollectionMain += createButton(
-            <'                                Export <0>', AbilityIconString(Hero.Bastion, Button.Ability1)>,
-            primaryAction: MenuAction.Export,
-            scale: 2.5,
-            clickWidth: 1.7,
-            posX: 1.5,
-            posY: .6,
-            defaultColor: Color.White);
-        
-        freecamSwitchID = createButton(
-            'noclip: off',
-            primaryAction: MenuAction.FreecamIncrement,
-            secondaryAction: MenuAction.FreecamDecrement,
-            scale: 2.5,
-            posX: -1.7,
-            posY: 0.6,
-            clickWidth: 1.0,
-            defaultColor: Color.White);
-        
-        linkModeID = createButton(
-            null,
-            posX: -1.5,
-            posY: 0,
-            clickWidth: 1.7,
-            onClick: l => {
-                attributeMode = !attributeMode;
-                updateSegmentModeLabel();
-            });
-        
-        attributeDescriptionButton = createButton(
-            label: ' Attribute:',
-            posX: -1.7,
-            posY: -0.2,
-            interactable: false
-        );
-        
-        buttonCollectionMain += createButton(
-            'Mirror map',
-            onClick: _ => openMirrorConfirmationScreen(),
-            posX: -1.7,
-            posY: 0.3,
-            clickWidth: 1.0,
-            defaultColor: Color.White);
-        
-        createHelpButton(-2.3, -0.1, null, [
-            MessageLine.Separator('Connect: Paths', Color.Rose),
-            MessageLine.Text('In path mode, you can select two nodes in order to create a path.'
-                + '\nThis will allow bots to walk between both nodes.'),
-            MessageLine.Separator('Connect: Attributes', Color.Orange),
-            MessageLine.Text('You can tag a path with the current "Attribute" value. Tagging paths'
-                + '\nmay have a few uses, for example:\n\n1. Creating one-ways, such as paths that drop from ledges.'
-                + '\n\n2: Creating paths that can utilize hero abilities to get across.'
-                + '\n\n3: Only allowing the bots on the correct team to enter a spawn room.'
-                + '\n\n4: Doors which are only open depending on the objective progress.'
-                + '\n\n5: Meleeing or jumping over fences that are in a path.')
-        ]);
-        
-        attributeSelector = new NumberSelector(attribute, posX: -.95, posY: -0.2, true, value => attribute = value);
-        buttonCollectionMain += [freecamSwitchID, linkModeID, attributeDescriptionButton];
+		buttonCollectionMain += createButton(
+			<'                                Export <0>', AbilityIconString(Hero.Bastion, Button.Ability1)>,
+			primaryAction: MenuAction.Export,
+			scale: 2.5,
+			clickWidth: 1.7,
+			posX: 1.5,
+			posY: .6,
+			defaultColor: Color.White);
 
-        updateFreecamLabel();
-        updateSegmentModeLabel();
-    }
-    else if (newState == MenuState.Rules)
-        SetupRuleMenu();
-    else if (newState == MenuState.Export)
-        ExportMenu();
+		freecamSwitchID = createButton(
+			'noclip: off',
+			primaryAction: MenuAction.FreecamIncrement,
+			secondaryAction: MenuAction.FreecamDecrement,
+			scale: 2.5,
+			posX: -1.7,
+			posY: 0.6,
+			clickWidth: 1.0,
+			defaultColor: Color.White);
+
+		linkModeID = createButton(
+			null,
+			posX: -1.5,
+			posY: 0,
+			clickWidth: 1.7,
+			onClick: l => {
+				attributeMode = !attributeMode;
+				updateSegmentModeLabel();
+			});
+
+		attributeDescriptionButton = createButton(
+			label: ' Attribute:',
+			posX: -1.7,
+			posY: -0.2,
+			interactable: false
+		);
+
+		buttonCollectionMain += createButton(
+			'Mirror map',
+			onClick: _ => openMirrorConfirmationScreen(),
+			posX: -1.7,
+			posY: 0.3,
+			clickWidth: 1.0,
+			defaultColor: Color.White);
+
+		createHelpButton(-2.3, -0.1, null, [
+			MessageLine.Separator('Connect: Paths', Color.Rose),
+			MessageLine.Text('In path mode, you can select two nodes in order to create a path.'
+				+ '\nThis will allow bots to walk between both nodes.'),
+			MessageLine.Separator('Connect: Attributes', Color.Orange),
+			MessageLine.Text('You can tag a path with the current "Attribute" value. Tagging paths'
+				+ '\nmay have a few uses, for example:\n\n1. Creating one-ways, such as paths that drop from ledges.'
+				+ '\n\n2: Creating paths that can utilize hero abilities to get across.'
+				+ '\n\n3: Only allowing the bots on the correct team to enter a spawn room.'
+				+ '\n\n4: Doors which are only open depending on the objective progress.'
+				+ '\n\n5: Meleeing or jumping over fences that are in a path.')
+		]);
+
+		attributeSelector = new NumberSelector(attribute, posX: -.95, posY: -0.2, true, value => attribute = value);
+		buttonCollectionMain += [freecamSwitchID, linkModeID, attributeDescriptionButton];
+
+		updateFreecamLabel();
+		updateSegmentModeLabel();
+	}
+	else if (newState == MenuState.Rules)
+		SetupRuleMenu();
+	else if (newState == MenuState.Export)
+		ExportMenu();
 }
 
 rule: 'CM: Freecam increment'
 Event.OngoingPlayer
 if (cm_currActionID == MenuAction.FreecamIncrement)
 {
-    IsNoclipping = !IsNoclipping;
-    updateFreecamLabel();
+	IsNoclipping = !IsNoclipping;
+	updateFreecamLabel();
 }
 
 rule: 'CM: Undo'
@@ -400,7 +400,7 @@ Event.OngoingPlayer
 if (cm_currActionID == MenuAction.Undo)
 if (CanUndo)
 {
-    Undo();
+	Undo();
 }
 
 rule: 'CM: Redo'
@@ -408,80 +408,80 @@ Event.OngoingPlayer
 if (cm_currActionID == MenuAction.Redo)
 if (CanRedo)
 {
-    Redo();
+	Redo();
 }
 
 void UpdateUndoInteractability() globalvar 'CM: Update undo interactability'
 {
-    if (undoText != -1)
-    {
-        SetInteractabilityAndColor(undoText, CanUndo, CanUndo ? Color.Aqua : Color.Gray, HostPlayer());
-        SetInteractabilityAndColor(redoText, CanRedo, CanRedo ? Color.Yellow : Color.Gray, HostPlayer());
-    }
+	if (undoText != -1)
+	{
+		SetInteractabilityAndColor(undoText, CanUndo, CanUndo ? Color.Aqua : Color.Gray, HostPlayer());
+		SetInteractabilityAndColor(redoText, CanRedo, CanRedo ? Color.Yellow : Color.Gray, HostPlayer());
+	}
 }
 
 rule: 'CM: Change link mode'
 Event.OngoingPlayer
 if (cm_currActionID == MenuAction.LinkMode)
 {
-    attributeMode = !attributeMode;
+	attributeMode = !attributeMode;
 }
 
 rule: 'CM: Add dummy'
 Event.OngoingPlayer
 if (cm_currActionID == MenuAction.AddDummy)
 {
-    chooseHeroMenu(hero => {
-        editorState = EditorState.PlaceDummy;
-        placingDummyHero = hero;
-    });
+	chooseHeroMenu(hero => {
+		editorState = EditorState.PlaceDummy;
+		placingDummyHero = hero;
+	});
 }
 
 void updateFreecamLabel() '(Subroutine) CM: Update freecam label'
 {
-    SetLabel(freecamSwitchID, IsNoclipping ? 'noclip: on' : 'noclip: off');
+	SetLabel(freecamSwitchID, IsNoclipping ? 'noclip: on' : 'noclip: off');
 }
 
 void updateSegmentModeLabel() '(Subroutine) CM: Update segment mode label'
 {
-    SetLabel(linkModeID, !attributeMode ? 'Connect: Paths' : '          Connect: Attributes');
-    SetColor(attributeDescriptionButton, attributeMode ? CustomColor(240, 240, 240, 255) : Color.Gray);
-    if (attributeSelector)
-        attributeSelector.SetInteractable(attributeMode);
+	SetLabel(linkModeID, !attributeMode ? 'Connect: Paths' : '          Connect: Attributes');
+	SetColor(attributeDescriptionButton, attributeMode ? CustomColor(240, 240, 240, 255) : Color.Gray);
+	if (attributeSelector)
+		attributeSelector.SetInteractable(attributeMode);
 }
 
 void destroyButtonCollection(ref Number[] buttonCollection)
 {
-    while (buttonCollection.Length)
-    {
-        DestroyButton(buttonCollection.First);
-        buttonCollection.ModRemoveByIndex(0);
-    }
+	while (buttonCollection.Length)
+	{
+		DestroyButton(buttonCollection.First);
+		buttonCollection.ModRemoveByIndex(0);
+	}
 }
 
 void setMainLabel(String label) '(Subroutine) CM: Set main label'
 {
-    SetLabel(mainText, label);
+	SetLabel(mainText, label);
 }
 
 globalvar Hero => void chooseHeroCallback!;
 
 void chooseHeroMenu(Hero => void callback) playervar '(Subroutine) CM: Choose hero'
 {
-    SetMenuState(MenuState.ChooseHero);
+	SetMenuState(MenuState.ChooseHero);
 
-    for (Number i = 0; AllHeroes().Length; 1)
-    {
-        buttonCollectionMain += createButton(
-            label: HeroIconString(AllHeroes()[i]),
-            primaryAction: [MenuAction.ChooseHero, AllHeroes()[i]],
-            posX: -2 + (i % 13) / 3,
-            posY: 0.5 - (i / 13 ~ Floor()) / 2,
-            scale: 5
-        );
-    }
+	for (Number i = 0; AllHeroes().Length; 1)
+	{
+		buttonCollectionMain += createButton(
+			label: HeroIconString(AllHeroes()[i]),
+			primaryAction: [MenuAction.ChooseHero, AllHeroes()[i]],
+			posX: -2 + (i % 13) / 3,
+			posY: 0.5 - (i / 13 ~ Floor()) / 2,
+			scale: 5
+		);
+	}
 
-    chooseHeroCallback = callback;
+	chooseHeroCallback = callback;
 }
 
 rule: 'CM: Hero ready'
@@ -489,23 +489,23 @@ Event.OngoingPlayer
 if (cm_currActionID[0] == MenuAction.ChooseHero)
 if (chooseHeroCallback)
 {
-    chooseHeroCallback(cm_currActionID[1]);
-    SetMenuState(MenuState.Main);
-    chooseHeroCallback = null;
-    cm_isInMenu = false;
-    releasePrimary = true;
+	chooseHeroCallback(cm_currActionID[1]);
+	SetMenuState(MenuState.Main);
+	chooseHeroCallback = null;
+	cm_isInMenu = false;
+	releasePrimary = true;
 }
 
 void StartLongRunningTask(String message) 'Subroutine: Start Long Running Task'
 {
-    longRunningTask++;
-    cm_isInMenu = true;
-    SetMenuState(MenuState.LongRunningTask);
-    buttonCollectionMain += createButton(message, interactable: false);
+	longRunningTask++;
+	cm_isInMenu = true;
+	SetMenuState(MenuState.LongRunningTask);
+	buttonCollectionMain += createButton(message, interactable: false);
 }
 
 void EndLongRunningTask()
 {
-    longRunningTask--;
-    SetMenuState(MenuState.Main);
+	longRunningTask--;
+	SetMenuState(MenuState.Main);
 }
