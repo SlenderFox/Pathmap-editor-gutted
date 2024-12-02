@@ -4,165 +4,25 @@ import 'map languages.del';
 # A newline followed by a bunch of horizontal lines.
 String sep: '\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯';
 
-enum OutputLanguage
-{
-	Workshop,
-	OSTW,
-	OverPy
-}
-
-# `0` = Workshop, `1` = OSTW, `2` = overpy
-globalvar persist Number outputLanguage;
-
-# Determines which components get built.
-# `[0]`: The map itself. (default: true)
-# `[1]`: The custom rules. (default: true)
-# `[2]`: The core pathfinding code. (default: false)
-globalvar Boolean[] buildToggles = [true, true, false];
-
-globalvar Number selectWorkshopButton!;
-globalvar Number selectOstwButton!;
-globalvar Number selectOverpyButton!;
 globalvar Number exportButton!;
 
 void ExportMenu() 'EXPORT: create export menu'
 {
 	setMainLabel("main / export");
 
-	createHelpButton(posX: -1.25, posY: .8,
-		'Export settings', [
-			MessageLine.Text('These settings decide which pathfinding components will be exported.\n'
-				+ 'The generated code exported should be copied into your gamemode.\n\n', Color.White),
-			MessageLine.Separator('Export Map', Color.Green),
-			MessageLine.Text(<'If enabled, the nav mesh you created for <0> will be generated.\n\n', CurrentMap()>, Color.White),
-			MessageLine.Separator('Export Custom Rules', Color.Green),
-			MessageLine.Text('If enabled, the custom rules in the rule menu will be compiled into the specified workshop language.\n\n', Color.White),
-			MessageLine.Separator('Core pathfinding code', Color.Yellow),
-			MessageLine.Text('If enabled, the core pathfinding algorithm will be generated.\n' +
-			'This only needs to be added to your project once.', Color.White)
-		]);
-	buttonCollectionMain += createButton(
-		label: "┏━ Export Settings ━┓",
-		posX: -1.25,
-		posY: .6,
-		defaultColor: Color.White,
-		interactable: false
-	);
-	CreateToggle(0, 'Export Map', posX: -1.25, posY: .3);
-	CreateToggle(1, 'Export Custom Rules', posX: -1.25, posY: .0);
-	CreateToggle(2, 'Core Pathfinding Code', posX: -1.25, posY: -.3);
-
-	createHelpButton(posX: 1.5, posY: .8,
-		'Pathmaps can be compiled into several workshop languages.   ', [
-			MessageLine.Separator('Workshop Code', Color.Green),
-			MessageLine.Text('Vanilla workshop syntax.\nThis can be pasted directly into the game.\n\n', Color.White),
-			MessageLine.Separator('Ostw', Color.SkyBlue),
-			MessageLine.Text(
-'An abstraction over the workshop allowing programming features such as collections in the form of
-structs or classes, object '+ 'oriented programming, and lambdas.', Color.White),
-			MessageLine.Text('https://github.com/ItsDeltin/Overwatch-Script-To-Workshop\n\n', Color.Blue),
-			MessageLine.Separator('Overpy', Color.Yellow),
-			MessageLine.Text(
-'Code your gamemodes with modern development practices and break the limitations of the
-workshop UI with features such as '+'multiple files, macros, switches, enums, optimizations,
-string splitting, better syntax, etc.', Color.White),
-			MessageLine.Text('https://github.com/Zezombye/overpy', Color.Blue)
-		]);
-	buttonCollectionMain += createButton(
-		label: "┏━ Language ━┓",
-		posX: 1.5,
-		posY: .6,
-		defaultColor: Color.White,
-		interactable: false
-	);
-	selectWorkshopButton = createButton(
-		label: "",
-		posX: 1.5,
-		posY: .3,
-		clickWidth: 1.2,
-		defaultColor: Color.Green,
-		onClick: left => {
-			outputLanguage = 0;
-			SetLanguageSelectLabels();
-		},
-	);
-	selectOstwButton = createButton(
-		label: "",
-		posX: 1.5,
-		posY: 0.,
-		clickWidth: 1.2,
-		defaultColor: Color.SkyBlue,
-		onClick: left => {
-			outputLanguage = 1;
-			SetLanguageSelectLabels();
-		},
-	);
-	selectOverpyButton = createButton(
-		label: "",
-		posX: 1.5,
-		posY: -.3,
-		clickWidth: 1.2,
-		defaultColor: Color.Yellow,
-		onClick: left => {
-			outputLanguage = 2;
-			SetLanguageSelectLabels();
-		},
-	);
-
-	createHelpButton(posX: 0, posY: -0.7, null, [
-		MessageLine.Separator('Code Generation', Color.Green),
-		MessageLine.Text('This button will generate the pathfinding code that you can copy into your gamemode.\n' +
-			'The code can be copied from the inspector by clicking the "Copy to clipboard all log" button.\n'),
-		MessageLine.Text('Make sure the "Enable Workshop Inspector Log File" setting is enabled under Options >\n' +
-			'Gameplay > General.\n\n'),
-		MessageLine.Text('Don\'t confuse this with saving your map in the editor, you won\'t be able to re-edit\n' +
-			'your map with the code generated from this. To do that, see the guide in the main menu.', Color.Yellow)]);
 	exportButton = createButton(
 		label: '',
 		posY: -0.9,
 		clickWidth: 3,
 		defaultColor: Color.Green,
 		onClick: left => {
-			# Do nothing if nothing is going to be exported.
-			if (!buildToggles[0] && !buildToggles[1] && !buildToggles[2]) {
-				showMessage('Error', [MessageLine.Text('\n\nAll exporting options disabled, nothing to export.', Color.Rose)]);
-			} else {
-				Export();
-			}
+			Export();
 		}
 	);
 
-	buttonCollectionMain += [selectWorkshopButton, selectOstwButton, selectOverpyButton, exportButton];
-	SetLanguageSelectLabels();
+	buttonCollectionMain += [exportButton];
+	SetLabel(exportButton, <'<0>Generate code for ostw<0>', AbilityIconString(Hero.Torbjorn, Button.Ability2)>);
 }
-
-void SetLanguageSelectLabels() 'Subroutine: Set Language Select Labels'
-{
-	SetLabel(selectWorkshopButton, outputLanguage == 0 ? '【Workshop】' : 'Workshop');
-	SetLabel(selectOstwButton, outputLanguage == 1 ? '【Ostw】' : 'Ostw');
-	SetLabel(selectOverpyButton, outputLanguage == 2 ? '【Overpy】' : 'Overpy');
-	SetLabel(exportButton, <'<1>Generate code for <0><1>', ['the workshop', 'ostw', 'overpy'][outputLanguage], AbilityIconString(Hero.Torbjorn, Button.Ability2)>);
-}
-
-void CreateToggle(in Number index, in String label, in Number posX, in Number posY)
-{
-	Number bid: NextButtonId();
-	buttonCollectionMain += createButton(
-		label: ExportBuildLabel(label, index),
-		defaultColor: ExportBuildColor(index),
-		posX: posX,
-		posY: posY,
-		clickWidth: 1.5,
-		onClick: left => {
-			buildToggles[index] = !buildToggles[index];
-			SetLabel(bid, ExportBuildLabel(label, index));
-			SetColor(bid, ExportBuildColor(index));
-		},
-	);
-}
-
-String ExportBuildLabel(String label, Number index): <'<0>: <1>', label, buildToggles[index] ? 'on' : 'off'>;
-Color ExportBuildColor(Number index): buildToggles[index] ? Color.LimeGreen : CustomColor(182, 57, 57, 255);
 
 rule: 'EXPORT: open export menu'
 Event.OngoingPlayer
@@ -179,304 +39,15 @@ void Export() playervar 'Subroutine: Generate map code.'
 	EnableInspector();
 
 	# Export introduction.
-	LogToInspector(<'Place the following text into your <0> script:<1>\n/*', ['workshop', 'ostw', 'overpy'][outputLanguage], sep>);
+	LogToInspector(<'Place the following text into your ostw script:<0>\n/*', sep>);
 
-	# 1. Export the core pathfinding code.
-	if (buildToggles[2]) {
-		ExportCore();
-	}
-	# 2. Export the rules.
-	if (buildToggles[1]) {
-		ExportRules();
-	}
-	# 3. Export the map.
-	if (buildToggles[0]) {
-		# Export map to workshop.
-		if (outputLanguage == 0)
-			ExportMapToWorkshop();
-		# Export map to ostw.
-		else if (outputLanguage == 1)
-			ExportMapToOstw();
-		# Export map to overpy.
-		else if (outputLanguage == 2)
-			ExportMapToOverpy();
-	}
+	# Export map to ostw.
+	ExportMapToOstw();
 
 	# Disable inspector.
 	DisableInspector();
 
 	EndLongRunningTask();
-
-	# Show code generation completed message.
-	showMessage('Pathfinding code generated!', [
-		MessageLine.Separator('Your code has been generated, and you are almost ready to start pathfinding players!\n\n', Color.LimeGreen),
-		MessageLine.Text(
-			'Open the inspector and click the "Copy To Workshop All Log" button to copy the generated code to your clipboard.\n' +
-			<'Paste the contents into a text editor<0>\n\n', outputLanguage == 0 ?
-			'. Remove the first timestamp and then you can paste the workshop\ncode directly into your game.' : ', then follow the instructions in the text to use the pathfinder.'>),
-		MessageLine.Separator(''),
-		MessageLine.Text('It is recommended to restart the game instance before doing another export\n' +
-			'because the copy will include *all* exports. Remember to save your map beforehand\nby copying the action set code!')
-	]);
-}
-
-void ExportCore() 'Subroutine: Export: Core'
-{
-	# Export core code to workshop.
-	if (outputLanguage == 0)
-		PrintFileToWorkshopLog('../pathfinder/core.ow', []);
-	# Export core code to ostw.
-	else if (outputLanguage == 1)
-		PrintFileToWorkshopLog('../pathfinder/core.ostw', []);
-	# Export core code to overpy.
-	else if (outputLanguage == 2)
-		PrintFileToWorkshopLog('../pathfinder/core.opy', []);
-}
-
-void ExportRules() playervar 'EXPORT: Export'
-{
-	// OngoingPlayer is not vital, it's just so we can use player variables here
-	OutputLanguage lang: <OutputLanguage>outputLanguage;
-	Boolean is_ow: lang == OutputLanguage.Workshop;
-	Boolean is_ostw: lang == OutputLanguage.OSTW;
-	Boolean is_overpy: lang == OutputLanguage.OverPy;
-
-	for(define i = 0; Rules.Length; 1) {
-		# Rule syntax
-		ExportStatement(lang,
-			'*/ rule(\"【Generated】Custom pathfinding rule #{0}\") { /*'.Format([i + 1]),
-			'*/ rule: \"【Generated】Custom pathfinding rule #{0}\" /*'.Format([i + 1]),
-			'*/\nrule \"【Generated】Custom pathfinding rule #{0}\": @Event eachPlayer /*'.Format([i + 1])
-		);
-
-		# Get the number of enabled heroes.
-		Number numberOfEnabledHeroes! = (Rules[i].EnabledHeroes[0] ? AllHeroes().Length - (Rules[i].EnabledHeroes.Length - 1) : Rules[i].EnabledHeroes.Length - 1);
-		# Store the first toggled hero. This is effectively the first enabled hero since
-		# anything using this value ensures that the switch is off. This will be null if no heroes are toggled.
-		Hero firstEnabledHero! = Rules[i].EnabledHeroes[1];
-
-		# Add event (ow)
-		if (is_ow) {
-			LogToInspector(<'*/ event { Ongoing - Each Player; All; <0>; } /*',
-				numberOfEnabledHeroes != 1 ? 'All' : firstEnabledHero>);
-		}
-		# Add event (ostw)
-		else if (is_ostw) {
-			LogToInspector('*/ Event.OngoingPlayer /*');
-			if (numberOfEnabledHeroes == 1) {
-				LogToInspector(<'*/ Player.<0> /*', workshopHeroToOstwHero(firstEnabledHero)>); // torb
-			}
-		}
-		# Add event (overpy)
-		else if (is_overpy && numberOfEnabledHeroes == 1) {
-			LogToInspector(<'*/\n    @Hero <0> /*', workshopHeroToOverpyHero(firstEnabledHero)>);
-		}
-
-		Hero[] toggledHeroes! = Rules[i].GetToggledHeroes();
-		String heroListString! = null;
-		Boolean doExportHeroArray! = numberOfEnabledHeroes > 1 && numberOfEnabledHeroes < AllHeroes().Length;
-		if (doExportHeroArray)
-		{
-			heroListString = StringJoin(toggledHeroes, ', ', v =>
-			{
-				if (is_ow)
-					return <'Hero(<0>)', v>;
-				if (is_ostw)
-					return <'Hero.<0>', workshopHeroToOstwHero(v)>;
-				if (is_overpy)
-					return <'Hero.<0>', workshopHeroToOverpyHero(v)>;
-			});
-		}
-		Boolean heroListCondition! = !Rules[i].EnabledHeroes[0];
-
-		# Workshop condition
-		if (lang == OutputLanguage.Workshop) {
-			LogToInspector('*/ conditions { /*');
-			LogToInspector('*/     Array Contains(Event Player.pfAttributes, {0}) == True; /*'.Format([Rules[i].ExecutesOnAttribute]));
-			# Multiple heroes
-			if (doExportHeroArray) {
-				LogToInspector(<'*/     Array Contains(Array(<0>), Hero Of(Event Player)) == <1>; /*', heroListString, heroListCondition>);
-			}
-			LogToInspector('*/ } actions { /*');
-		}
-		# OSTW condition
-		else if (lang == OutputLanguage.OSTW) {
-			LogToInspector('*/ if (pfAttributes.Contains({0})) /*'.Format([Rules[i].ExecutesOnAttribute]));
-			# Multiple heroes
-			if (doExportHeroArray) {
-				LogToInspector(<'*/ if (<1>[<0>].Contains(HeroOf())) /*', heroListString, heroListCondition ? '' : '!'>);
-			}
-			# Start rule block
-			LogToInspector('*/ { /*');
-		}
-		# Overpy condition
-		else if (lang == OutputLanguage.OverPy) {
-			LogToInspector('*/\n    @Condition {0} in eventPlayer.pfAttributes /*'.Format([Rules[i].ExecutesOnAttribute]));
-			# Multiple heroes
-			if (doExportHeroArray) {
-				LogToInspector(<'*/\n    @Condition eventPlayer.getCurrentHero() <1> [<0>] /*', heroListString, heroListCondition ? 'in' : 'not in'>);
-			}
-		}
-
-		# Loop through each action in the rule.
-		for(define a = 0; Rules[i].Actions.Length; 1) {
-			# Extract the action ID.
-			define data = Rules[i].Actions[a].Data;
-			define actionID: data[0];
-
-			# Wait
-			if (actionID == 0) {
-				ExportAction(lang,
-					<'Wait(<0>, Ignore Condition);', data[1]>,
-					<'Wait(<0>);', data[1]>,
-					<'wait(<0>)', data[1]>);
-			}
-			# Jump
-			else if (actionID == 1) {
-				ExportAction(lang,
-					'Press Button(Event Player, Button(Jump));',
-					'PressButton(EventPlayer(), Button.Jump);',
-					'eventPlayer.forceButtonPress(Button.JUMP)');
-			}
-			# Start holding jump
-			else if (actionID == 2) {
-				ExportAction(lang,
-					'Start Holding Button(Event Player, Button(Jump));',
-					'StartHoldingButton(EventPlayer(), Button.Jump);',
-					'eventPlayer.startForcingButton(Button.JUMP)');
-			}
-			# Stop holding jump
-			else if (actionID == 3) {
-				ExportAction(lang,
-					'Stop Holding Button(Event Player, Button(Jump));',
-					'StopHoldingButton(EventPlayer(), Button.Jump);',
-					'eventPlayer.stopForcingButton(Button.JUMP)');
-			}
-			# Ability 1
-			else if (actionID == 4) {
-				ExportAction(lang,
-					'Press Button(Event Player, Button(Ability 1));',
-					'PressButton(EventPlayer(), Button.Ability1);',
-					'eventPlayer.forceButtonPress(Button.ABILITY_1)');
-			}
-			# Ability 2
-			else if (actionID == 5) {
-				ExportAction(lang,
-					'Press Button(Event Player, Button(Ability 2));',
-					'PressButton(EventPlayer(), Button.Ability2);',
-					'eventPlayer.forceButtonPress(Button.ABILITY_2)');
-			}
-			# Melee
-			else if (actionID == 6) {
-				ExportAction(lang,
-					'Press Button(Event Player, Button(Melee));',
-					'PressButton(EventPlayer(), Button.Melee);',
-					'eventPlayer.forceButtonPress(Button.MELEE)');
-			}
-			# Primary fire
-			else if (actionID == 7) {
-				ExportAction(lang,
-					'Press Button(Event Player, Button(Primary Fire));',
-					'PressButton(EventPlayer(), Button.PrimaryFire);',
-					'eventPlayer.forceButtonPress(Button.PRIMARY_FIRE)');
-			}
-			# Secondary fire
-			else if (actionID == 8) {
-				ExportAction(lang,
-					'Press Button(Event Player, Button(Secondary Fire));',
-					'PressButton(EventPlayer(), Button.SecondaryFire);',
-					'eventPlayer.forceButtonPress(Button.SECONDARY_FIRE)');
-			}
-			# Stop walking
-			else if (actionID == 9) {
-				ExportAction(lang,
-					'Stop Throttle In Direction(Event Player);',
-					'StopThrottleInDirection();',
-					'eventPlayer.stopThrottleInDirection()');
-			}
-			# Walk to destination
-			else if (actionID == 10) {
-				ExportAction(lang,
-					'Call Subroutine(pfWalkToDestination);',
-					'pfWalkToDestination();',
-					'pfWalkToDestination()');
-			}
-			# Look at floor
-			else if (actionID == 11) {
-				ExportAction(lang,
-					'Start Facing(Event Player, Direction From Angles(Horizontal Facing Angle Of(Event Player), 89), 1000, To World, None);',
-					'StartFacing(EventPlayer(), DirectionFromAngles(HorizontalFacingAngleOf(), 89), 1000, Relative.ToWorld, FacingRev.None);',
-					'eventPlayer.startFacing(angleToDirection(eventPlayer.getHorizontalFacingAngle(), 89), 1000, Relativity.TO_WORLD,' + ' FacingReeval.NONE)');
-			}
-			# Look at destination
-			else if (actionID == 12) {
-				ExportAction(lang,
-					'Call Subroutine(pfLookAtDestination);',
-					'pfLookAtDestination();',
-					'pfLookAtDestination()');
-			}
-			# Wait for ability 1
-			else if (actionID == 13) {
-				ExportAction(lang,
-					'Wait(Ability Cooldown(Event Player, Button(Ability 1)), Ignore Condition);',
-					'Wait(AbilityCooldown(eventPlayer, Button.Ability1));',
-					'wait(eventPlayer.getAbilityCooldown(Button.ABILITY_1))');
-			}
-			# Wait for ability 2
-			else if (actionID == 14) {
-				ExportAction(lang,
-					'Wait(Ability Cooldown(Event Player, Button(Ability 2)), Ignore Condition);',
-					'Wait(AbilityCooldown(eventPlayer, Button.Ability2));',
-					'wait(eventPlayer.getAbilityCooldown(Button.ABILITY_2))');
-			}
-			# Wait for secondary fire
-			else if (actionID == 15) {
-				ExportAction(lang,
-					'Wait(Ability Cooldown(Event Player, Button(Secondary Fire)), Ignore Condition);',
-					'Wait(AbilityCooldown(eventPlayer, Button.SecondaryFire));',
-					'wait(eventPlayer.getAbilityCooldown(Button.SECONDARY_FIRE))');
-			}
-
-			MinWait();
-		}
-
-		# End rule & actions for the c-like languages
-		if (lang == OutputLanguage.Workshop)
-			LogToInspector('*/ } } /*');
-		else if (lang == OutputLanguage.OSTW)
-			LogToInspector('*/ } /*');
-
-		MinWait();
-	}
-}
-
-void ExportMapToWorkshop()
-{
-	ExportNodes();
-	ExportNeighbors();
-}
-
-void ExportNodes()
-{
-	ExportMapBlock('nodes', () => {
-		# Set loadedMap_segments
-		LogToInspector('*/     global.pfLoadedMap_nodes = Array( /*');
-		# For each attribute
-		ExportArray(Nodes, 10, (node, isLast) => <'Vector<0><1>', node.Node.Position, isLast ? '' : ', '>);
-		# End pathfinder segments
-		LogToInspector('*/ ); /*');
-	});
-}
-
-void ExportNeighbors()
-{
-	ExportMapBlock('neighbors', () => {
-		# Set loadedMap_neighors
-		LogToInspector('*/     global.pfLoadedMap_neighbors = Array( /*');
-		ExportNeighborsPattern('Array(', ')', 'Empty Array');
-		# End array
-		LogToInspector('*/ ); /*');
-	});
 }
 
 void ExportMapToOstw()
@@ -496,33 +67,6 @@ void ExportMapToOstw()
 	ExportNeighborsPattern('[', ']', '[]');
 	# Conclude JSON
 	LogToInspector('*/ ] }' + sep);
-}
-
-void ExportMapToOverpy()
-{
-	# This exported code should be placed in the overpy file.
-	LogToInspector(<'*/\n#!define loadMap() __script__("<0>.js")\nloadMap()<1>', CurrentMap(), sep>);
-
-	# Introduction message
-	LogToInspector(<'Place the following text into a file named \"<0>.js\":', CurrentMap()> + sep + '\n/*');
-
-	# Export Overpy nodes
-	LogToInspector('*/ const nodes = [ /*');
-	ExportArray(Nodes, 10, (wn, isLast) => <'vect(<0>, <1>, <2>)<3>',
-		wn.Node.Position.X, wn.Node.Position.Y, wn.Node.Position.Z, isLast ? '' : ','>);
-	LogToInspector('*/ ]; /*');
-
-	# Export Overpy neighors
-	LogToInspector('*/ const neighbors = [ /*');
-	ExportNeighborsPattern('[', ']', '[]');
-	LogToInspector('*/ ]; /*');
-
-	# Javascript -> overpy rules
-	LogToInspector('*/ function load(name, array) { return ( /*');
-	LogToInspector(<'*/ `rule "【Map】<0> (${name})":\n` + /*', CurrentMap()>);
-	LogToInspector(<'*/ `    @Condition getCurrentMap() == Map.<0>\n` + /*', mapNameToOverpyName(CurrentMap())>);
-	LogToInspector(<'*/ `    pfLoadedMap_${name} = ${array}\n`); } /*'>);
-	LogToInspector('*/ load("nodes", `[${nodes.join(\',\')}]`) + load("neighbors", JSON.stringify(neighbors))');
 }
 
 # Exports the segments and attributes in a nicely optimized way.
@@ -594,22 +138,6 @@ String StringJoin<T>(in T[] array, in String joinValue, const T => Any tToString
 	return joinStringResult;
 }
 
-void ExportMapBlock(in String blockName, const () => void exportActions)
-{
-	# Attributes rule
-	LogToInspector('*/ rule(\"【Map】{0} ({1})\") { event { Ongoing - Global; } /*'.Format([CurrentMap(), blockName]));
-	# Conditions
-	LogToInspector('*/ conditions { /*');
-	# Make sure this is the correct map
-	LogToInspector(mapCondition);
-	# Start actions
-	LogToInspector('*/ } actions { /*');
-	# Export inner actions
-	exportActions();
-	# End action & rule block
-	LogToInspector('*/ } } /*');
-}
-
 String ExportJsonVector(in Vector vector, in Boolean isLast)
 {
 	return <'{"x":<0>, "y":<1>, "z":<2>}<3>', vector.X, vector.Y, vector.Z, isLast ? '' : ', '>;
@@ -621,15 +149,3 @@ String ExportOstwDataSet(in String setName)
 		<'if (CurrentMap() == Map.<0>) {\n', mapNameToOstwName(CurrentMap())> +
 		<'    pfLoadedMap.<1> = import("<0>.jsonc").<1>;\n}', CurrentMap(), setName>;
 }
-
-void ExportStatement(in OutputLanguage language, in String workshop, in String deltinscript, in String overpy)
-{
-	LogToInspector([workshop, deltinscript, overpy][language]);
-}
-
-void ExportAction(in OutputLanguage language, in String workshop, in String deltinScript, in String overpy)
-{
-	LogToInspector("*/{0} /*".Format([[" " + workshop, "     " + deltinScript, "\n    " + overpy][language]]));
-}
-
-String mapCondition: '*/     Current Map == Map({0}); /*'.Format([CurrentMap()]);
