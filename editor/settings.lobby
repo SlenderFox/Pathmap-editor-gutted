@@ -7,12 +7,12 @@
 		"All": {
 			"Respawn Time Scalar": 0
 		},
-		"Skirmish": {
-			"Enabled": true
-		},
 		"Team Deathmatch": {
 			"Enabled": true,
-			"Game Mode Start": "Manual"
+			"Game Mode Start": "Manual",
+			"Enabled Maps": [
+				"Kanezaka"
+			]
 		}
 	},
 	"Heroes": {
