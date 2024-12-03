@@ -11,7 +11,7 @@ void ExportMenu() 'EXPORT: create export menu'
 	setMainLabel("main / export");
 
 	exportButton = createButton(
-		label: '',
+		label: 'Generate code',
 		posY: -0.9,
 		clickWidth: 3,
 		defaultColor: Color.Green,
@@ -21,7 +21,6 @@ void ExportMenu() 'EXPORT: create export menu'
 	);
 
 	buttonCollectionMain += [exportButton];
-	SetLabel(exportButton, <'<0>Generate code for ostw<0>', AbilityIconString(Hero.Torbjorn, Button.Ability2)>);
 }
 
 rule: 'EXPORT: open export menu'
