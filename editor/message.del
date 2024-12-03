@@ -6,16 +6,6 @@ playervar Any[] msgProgressTexts = [];
 playervar (() => MessageLine[])[] msgPages;
 playervar Number msgCurrentPage;
 
-void createHelpButton(in Number posX, in Number posY, in String header, in MessageLine[] lines)
-{
-	buttonCollectionMain += createButton(
-		label: "〔?〕",
-		posX: posX,
-		posY: posY,
-		defaultColor: Color.Rose,
-		onClick: left => showMessage(header, lines));
-}
-
 void showMessage(String objectiveDescription, MessageLine[] lines) 'Subroutine: Display message'
 {
 	HostPlayer().cm_isInMenu = false;
