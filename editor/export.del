@@ -35,10 +35,10 @@ void Export() playervar 'Subroutine: Generate map code.'
 	EnableInspector();
 
 	# Regex to filter out the timestamps
-	LogToInspector('Regex: "[\n]*\[[\d:]*\] "');
+	LogToInspector('Regex: "[\\n]*\[[\d:]*\] "');
 
 	# Export introduction.
-	LogToInspector('// Place the following text into your ostw script:');
+	LogToInspector('\n// Place the following text into your ostw script:');
 
 	# Export map to ostw.
 	ExportMapToOstw();
@@ -56,7 +56,7 @@ void ExportMapToOstw()
 	LogToInspector(ExportOstwDataSet("neighbors"));
 
 	# Introduction message
-	LogToInspector(<'// Place the following text into a file named \"<0>.jsonc\":', CurrentMap()>);
+	LogToInspector(<'\n// Place the following text into a file named \"<0>.jsonc\":', CurrentMap()>);
 
 	# Export Ostw nodes
 	LogToInspector('\n{ "nodes": [');
