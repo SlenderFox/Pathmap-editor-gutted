@@ -207,23 +207,6 @@ void updateRenderingSegments() 'Subroutine: Update rendering segments'
 	).Map((s, i) => i);
 }
 
-rule: 'Snapshot'
-if (!inspector)
-if (canModifyMap)
-{
-	EnableInspectorRecording();
-	# 【◈ How to save & load ◈】
-	# Click the (x) button under the timeline.
-	#
-	# `                      ↓
-	# •-   ≡   □   □⃩    (x)
-	#
-	# Save the copied text into a text file. To load it, paste the contents into the first rule in the workshop editor.
-	DisableInspectorRecording();
-	Wait(5);
-	LoopIfConditionIsTrue();
-}
-
 rule: 'Main: Persistant Spawn'
 if (HasSpawned(host))
 if (savedPlayerLocation)
