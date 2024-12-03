@@ -35,7 +35,7 @@ void Export() playervar 'Subroutine: Generate map code.'
 	EnableInspector();
 
 	# Regex to filter out the timestamps
-	LogToInspector('Regex: "[\\n]*\[[\d:]*\] "');
+	LogToInspector('Regex: "[\\n]*\[[\d:]*\]"');
 
 	# Export introduction.
 	LogToInspector('\n// Place the following text into your ostw script:');
