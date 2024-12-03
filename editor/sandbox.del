@@ -176,41 +176,6 @@ void SetMenuState(MenuState newState) '(Subroutine) CM: Update menu'
 			defaultColor: Color.White);
 
 		buttonCollectionMain += createButton(
-			'Version history',
-			onClick: l => {
-				showMessage(null, [
-					MessageLine.Header("Import code: hp2dg", Color.Orange),
-					MessageLine.Separator("v1.0.4", Color.SkyBlue),
-					MessageLine.Text("Initial Release")
-				]);
-			},
-			posX: 1.6,
-			posY: -.8,
-			clickWidth: 1.5,
-			defaultColor: Color.White);
-
-		buttonCollectionMain += createButton(
-			'credits',
-			onClick: l => {
-				showMessage(null, [
-					MessageLine.Separator('Pathmap Editor v1.0.4', Color.LimeGreen),
-					MessageLine.Text('https://github.com/ItsDeltin/Pathmap-editor\n', Color.Blue),
-					MessageLine.Header('  ☆ Credits ☆  ', Color.Rose),
-					MessageLine.Separator('Created by Deltin', Color.SkyBlue),
-					MessageLine.Text('with Overwatch Script To Workshop'),
-					MessageLine.Text('https://github.com/ItsDeltin/Overwatch-Script-To-Workshop\n', Color.Blue),
-					MessageLine.Separator('Josbird', Color.Orange),
-					MessageLine.Text('- Cursor menu library\n- Noclip\n'),
-					MessageLine.Separator('Zezombye', Color.Yellow),
-					MessageLine.Text('- Map symmetry data\n- overpy')
-				]);
-			},
-			posX: 1.6,
-			posY: -1,
-			clickWidth: 1.5,
-			defaultColor: Color.White);
-
-		buttonCollectionMain += createButton(
 			<'                      Rule editor <0>', AbilityIconString(Hero.Torbjorn, Button.Ability2)>,
 			primaryAction: MenuAction.RuleMenu,
 			scale: 2.5,
@@ -226,85 +191,6 @@ void SetMenuState(MenuState newState) '(Subroutine) CM: Update menu'
 			posX: 1.5,
 			posY: 0.2,
 			clickWidth: 1.7,
-			defaultColor: Color.White);
-
-		buttonCollectionMain += createButton(
-			'Guide',
-			onClick: l => {
-				showPagedMessage([
-					() => [
-						MessageLine.Separator('Getting started\n'),
-						MessageLine.Text('The pathmap editor creates nav meshes, which are used to pathfind dummy bots.\n'),
-						MessageLine.Text('The editor generates workshop code into the log which can be copied into your gamemode, you do\n' +
-							'not need the overhead of the entire editor in order to pathfind your bots.\n'),
-						MessageLine.Text('Make sure the "Enable Workshop Inspector" & "Enable Workshop Inspector Log File"\n'
-						+ 'settings are enabled in Options > Gameplay > General. This will allow you to save and export your map.\n\n', Color.Yellow),
-						MessageLine.Text('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'),
-						MessageLine.Text('These workshop codes contain the editor loaded with a completed waypoint graph.\n' +
-							'You can use these to see how your map should look.\n'),
-						MessageLine.Text('Esperança     Hanamura', Color.SkyBlue),
-						MessageLine.Text('GZWF9              FQY78', Color.Green)
-					],
-					() => [
-						MessageLine.Text('Pathfinding is made up of 3 components: Nodes, paths, and attributes.'),
-						MessageLine.Separator(<'<0> Nodes', AbilityIconString(Hero.Sombra, Button.SecondaryFire)>, Color.Turquoise),
-						MessageLine.Text('When pathfinding, bots will walk between the nodes placed in the world.\n'),
-						MessageLine.Separator(<'<0> Paths', AbilityIconString(Hero.Pharah, Button.Ability2)>, Color.Orange),
-						MessageLine.Text('Paths determine which nodes are connected.' +
-									'\nWhen the connect mode is "Connect: Paths", Select two nodes in the world to create a path between them.\n',),
-						MessageLine.Separator(<'<0> Attributes', AbilityIconString(Hero.Genji, Button.Jump)>, Color.Yellow),
-						MessageLine.Text('Paths can be tagged with values in order to create gates and paths that require hero abilities to cross.' +
-									'\nWhen the connect mode is "Connect: Attributes", Select two nodes to tag the path between them.')
-					],
-					() => [
-						MessageLine.Text('Note that there is a difference between "saving" and "exporting". Saving will allow you to edit the pathmap\n'
-							+ 'again in the editor. Exporting is generating the actual code that is copied into your gamemode.\n', Color.Yellow),
-						MessageLine.Separator('How To Save', Color.SkyBlue),
-						MessageLine.Text('1. Press Escape.\n2. Click "Open Workshop Inspector".\n'
-							+ '3. Click the (X) button below the timeline.\n'
-							+ '4. Save the copied contents into a text file.'),
-						MessageLine.Separator('How to load', Color.Yellow),
-						MessageLine.Text('1. Import the pathmap editor workshop code "GZWF9"\n2. Open the workshop editor.\n'
-							+ '3. scroll to the top of the page to the rule that says:'),
-						MessageLine.Header('【◈ Paste the actions to load a previous save here!! ◈】', CustomColor(179, 179, 179, 255)),
-						MessageLine.Text('4. Paste the saved text into the rule.\n'),
-						MessageLine.Text('Always remember that the workshop won\'t auto-save your map.', Color.Rose),
-						MessageLine.Text('If the game restarts or is closed you will lose your progress.')
-					],
-					() => [
-						MessageLine.Separator('How to load old maps', Color.SkyBlue),
-						MessageLine.Text('When loading your save from old editor versions, there is a chance you will get an error such as ' +
-									'\n"Expected variable after \'Global\'". You can fix this by editing your save so that the workshop accepts it.\n'),
-						MessageLine.Text('Step #1: Open your save in a text editor and delete the "variables" section.\n', Color.LimeGreen),
-						MessageLine.Text('Step #2: delete the unnecessary variable assignment actions. The variables below\n' +
-							'are part of the save, remove anything else.\n', Color.LimeGreen),
-						MessageLine.Text(
-'- VERSION                  ' + '                    - ATTRIBUTES_VALUE
-- MAP                       ' + '                        - ATTRIBUTES_ID
-- UNIQUENODEID              ' + '           - ATTRIBUTES_NODE1
-- SEGMENTUNIQUEID           ' + '      - ATTRIBUTES_NODE2
-- ATTRIBUTEUNIQUEID         ' + '     - SAVEDPLAYERLOCATION
-- NODES_NODE_UNIQUEID       ' + '- SAVEDPLAYERDIRECTION
-- NODES_NODE_POSITION       ' + '- IsNoclipping
-- SEGMENTS_ID               ' + '             - Rules_Actions_Data
-- SEGMENTS_NODE1            ' + '      - Rules_ExecutesOnAttribute
-- SEGMENTS_NODE2            ' + '      - Rules_EnabledHeroes
-- __LOADPERSIST')
-					],
-					() => [
-						MessageLine.Separator('How to use exported code\n'),
-						MessageLine.Text('Make sure to generate your Workshop, ostw, or overpy code in the export menu and add it to your game.\n' +
-							'Afterwards, you can pathfind bots by setting their "pfDestination" player variable to the target destination.\n'),
-						MessageLine.Text(<'Set Player Variable(pfDestination, Objective Position(0));\n<0>', '                               '>, subheader: 'Workshop code', subheaderColor: Color.Green),
-						MessageLine.Text(<'pfDestination = ObjectivePosition(0);\n<0>', '                               '>, subheader: 'ostw code', subheaderColor: Color.SkyBlue),
-						MessageLine.Text(<'eventPlayer.pfDestination = getObjectivePosition(0)\n<0>\n', '                               '>, subheader: 'overpy code', subheaderColor: Color.Yellow),
-						MessageLine.Text('You can chase the pfDestination variable to another player\'s position to make the bot follow them.')
-					]
-				]);
-			},
-			clickWidth: 1.5,
-			posX: 1.6,
-			posY: -.6,
 			defaultColor: Color.White);
 
 		buttonCollectionMain += createButton(
