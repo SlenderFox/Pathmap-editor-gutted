@@ -1,9 +1,6 @@
 import 'main.del';
 import 'map languages.del';
 
-# A newline followed by a bunch of horizontal lines.
-String sep: '\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯';
-
 globalvar Number exportButton!;
 
 void ExportMenu() 'EXPORT: create export menu'
@@ -37,8 +34,11 @@ void Export() playervar 'Subroutine: Generate map code.'
 	# Enable inspector so we can log the exported code to it.
 	EnableInspector();
 
+	# Regex to filter out the timestamps
+	LogToInspector('Regex: "[\n]*\[[\d:]*\] "');
+
 	# Export introduction.
-	LogToInspector(<'Place the following text into your ostw script:<0>\n/*', sep>);
+	LogToInspector('// Place the following text into your ostw script:');
 
 	# Export map to ostw.
 	ExportMapToOstw();
@@ -52,20 +52,20 @@ void Export() playervar 'Subroutine: Generate map code.'
 void ExportMapToOstw()
 {
 	# This exported code should be placed in the ostw file.
-	LogToInspector('*/' + ExportOstwDataSet("nodes") + '/*');
-	LogToInspector('*/' + ExportOstwDataSet("neighbors") + '/*');
+	LogToInspector(ExportOstwDataSet("nodes"));
+	LogToInspector(ExportOstwDataSet("neighbors"));
 
 	# Introduction message
-	LogToInspector(<'Place the following text into a file named \"<0>.jsonc\":', CurrentMap()> + sep + '\n/*');
+	LogToInspector(<'// Place the following text into a file named \"<0>.jsonc\":', CurrentMap()>);
 
 	# Export Ostw nodes
-	LogToInspector('*/ { "nodes": [ /*');
+	LogToInspector('\n{ "nodes": [');
 	ExportArray(Nodes, 10, (wn, isLast) => ExportJsonVector(wn.Node.Position, isLast));
 	# Export Ostw segments
-	LogToInspector('*/ ], "neighbors": [ /*');
+	LogToInspector('\n], "neighbors": [');
 	ExportNeighborsPattern('[', ']', '[]');
 	# Conclude JSON
-	LogToInspector('*/ ] }' + sep);
+	LogToInspector('\n] }');
 }
 
 # Exports the segments and attributes in a nicely optimized way.
@@ -104,7 +104,7 @@ void ExportNeighborsPattern(String beginArray, String endArray, String emptyArra
 				endArray>;
 		});
 		EnableInspectorRecording();
-		LogToInspector(<'*/ <0><1><2><3> /*', beginArray, neighborString, endArray, n == Nodes.Length - 1 ? '' : ','>);
+		LogToInspector(<'\n<0><1><2><3>', beginArray, neighborString, endArray, n == Nodes.Length - 1 ? '' : ','>);
 		DisableInspectorRecording();
 		Wait(0.03);
 	}
@@ -121,7 +121,7 @@ void ExportArray<T>(in T[] array, in Number step, const (T, Boolean) => String v
 		for (exportArrayNumB = exportArrayNumA; Min(exportArrayNumA + step, array.Length); 1) {
 			exportArrayStub = exportArrayStub + valueToString(array[exportArrayNumB], exportArrayNumB == array.Length - 1);
 		}
-		LogToInspector('*/{0}/*'.Format([exportArrayStub]));
+		LogToInspector('\n{0}'.Format([exportArrayStub]));
 		MinWait();
 	}
 }
