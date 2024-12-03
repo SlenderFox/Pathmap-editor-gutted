@@ -106,7 +106,7 @@ void ExportNeighborsPattern(String beginArray, String endArray, String emptyArra
 		EnableInspectorRecording();
 		LogToInspector(<'\n<0><1><2><3>', beginArray, neighborString, endArray, n == Nodes.Length - 1 ? '' : ','>);
 		DisableInspectorRecording();
-		Wait(0.03);
+		Wait(0.5);
 	}
 	EnableInspectorRecording();
 }
@@ -122,7 +122,7 @@ void ExportArray<T>(in T[] array, in Number step, const (T, Boolean) => String v
 			exportArrayStub = exportArrayStub + valueToString(array[exportArrayNumB], exportArrayNumB == array.Length - 1);
 		}
 		LogToInspector('\n{0}'.Format([exportArrayStub]));
-		MinWait();
+		Wait(0.5);
 	}
 }
 
